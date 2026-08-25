@@ -886,7 +886,26 @@
       <input id="newHabitName" placeholder="Habit name...">
       <button class="add-habit-btn" onclick="addHabit()">Add</button>
     </div>
-    <button class="close-btn" onclick="closeSettings()">Done</button>
+    <div class="section-divider" style="margin: 20px 0;"></div>
+    <div class="modal-title" style="font-size: 15px; margin-bottom: 12px;">🔄 Auto-Sync (GitHub API)</div>
+    <div style="font-size: 11px; color: var(--text-dim); margin-bottom: 10px; line-height: 1.4;">Store data directly in your repo. Requires a Personal Access Token (classic with 'repo' scope).</div>
+    
+    <input id="ghToken" type="password" placeholder="GitHub PAT (ghp_...)" style="width:100%; margin-bottom:8px; padding:10px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:inherit; outline:none;">
+    <input id="ghRepo" placeholder="Repo (e.g., username/repo)" style="width:100%; margin-bottom:8px; padding:10px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:inherit; outline:none;">
+    <input id="ghPath" placeholder="File path (e.g., data.json)" style="width:100%; margin-bottom:12px; padding:10px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:inherit; outline:none;">
+    
+    <div style="display:flex; gap:10px;">
+      <button class="add-habit-btn" onclick="saveGhSettings()" style="flex:1">💾 Save & Sync</button>
+      <button class="add-habit-btn" onclick="clearGhSettings()" style="flex:1; background:var(--red-bg); color:var(--red); border:1px solid rgba(248,113,113,0.3);">Disconnect</button>
+    </div>
+
+    <div class="section-divider" style="margin: 20px 0;"></div>
+    <div class="modal-title" style="font-size: 15px; margin-bottom: 12px;">📋 Manual Sync</div>
+    <div style="display:flex; gap:10px;">
+      <button class="add-habit-btn" onclick="exportData()" style="flex:1; background:var(--surface2); color:var(--text); border:1px solid var(--border);">Copy Data</button>
+      <button class="add-habit-btn" onclick="importData()" style="flex:1; background:var(--surface2); color:var(--text); border:1px solid var(--border);">Paste Data</button>
+    </div>
+    <button class="close-btn" onclick="closeSettings()" style="margin-top:20px;">Done</button>
   </div>
 </div>
 
@@ -1155,7 +1174,11 @@ let currentTab = 'daily';
 // ===== HELPERS =====
 function storageKey(y, m, d) { return `t_${y}_${m}_${d}`; }
 function getData(y, m, d) { const r = localStorage.getItem(storageKey(y, m, d)); return r ? JSON.parse(r) : {}; }
-function setData(y, m, d, data) { localStorage.setItem(storageKey(y, m, d), JSON.stringify(data)); }
+function updateSyncTimestamp() { 
+  localStorage.setItem('sync_timestamp', Date.now()); 
+  if (typeof triggerBgSync === 'function') triggerBgSync();
+}
+function setData(y, m, d, data) { localStorage.setItem(storageKey(y, m, d), JSON.stringify(data)); updateSyncTimestamp(); }
 function isToday(y, m, d) { return now.getFullYear() === y && now.getMonth() === m && now.getDate() === d; }
 function isFuture(y, m, d) { const t = new Date(); t.setHours(0,0,0,0); return new Date(y, m, d) > t; }
 
@@ -1164,7 +1187,7 @@ function getHabits() {
   return s ? JSON.parse(s) : DEFAULT_HABITS;
 }
 
-function saveHabits(h) { localStorage.setItem('tracker_habits', JSON.stringify(h)); }
+function saveHabits(h) { localStorage.setItem('tracker_habits', JSON.stringify(h)); updateSyncTimestamp(); }
 
 function getScore(y, m, d) {
   const data = getData(y, m, d);
@@ -1198,6 +1221,7 @@ function getRoadmapData(sectionId) {
 
 function setRoadmapData(sectionId, data) {
   localStorage.setItem(`rm_${sectionId}`, JSON.stringify(data));
+  updateSyncTimestamp();
 }
 
 function getRoadmapStats() {
@@ -1474,6 +1498,9 @@ document.getElementById('dayModal').onclick = (e) => {
 // ===== SETTINGS MODAL =====
 function openSettings() {
   renderSettingsList();
+  document.getElementById('ghToken').value = localStorage.getItem('gh_token') || '';
+  document.getElementById('ghRepo').value = localStorage.getItem('gh_repo') || '';
+  document.getElementById('ghPath').value = localStorage.getItem('gh_path') || 'data.json';
   document.getElementById('settingsModal').classList.add('active');
 }
 
@@ -1671,9 +1698,181 @@ document.getElementById('nextMonth').onclick = () => {
   renderDaily();
 };
 
+// ===== SYNC LOGIC =====
+function getAllData() {
+  const data = { timestamp: Date.now(), items: {} };
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key.startsWith('t_') || key.startsWith('rm_') || key === 'tracker_habits') {
+      data.items[key] = localStorage.getItem(key);
+    }
+  }
+  return data;
+}
+
+function exportData() {
+  const data = getAllData();
+  navigator.clipboard.writeText(JSON.stringify(data, null, 2)).then(() => {
+    showToast("📋 Data copied! Paste it into data.json on GitHub.");
+  }).catch(() => {
+    showToast("❌ Failed to copy to clipboard");
+  });
+}
+
+function importDataStr(jsonString, showMsg = true) {
+  try {
+    const data = JSON.parse(jsonString);
+    if (data && data.items) {
+      for (const [key, value] of Object.entries(data.items)) {
+        localStorage.setItem(key, value);
+      }
+      if (data.timestamp) localStorage.setItem('sync_timestamp', data.timestamp);
+      if (showMsg) {
+        showToast("✅ Data imported successfully!");
+        setTimeout(() => location.reload(), 1000);
+      }
+      return true;
+    }
+  } catch (e) {
+    if (showMsg) showToast("❌ Invalid data format!");
+  }
+  return false;
+}
+
+function importData() {
+  const str = prompt("Paste your tracker data JSON here:");
+  if (str) importDataStr(str);
+}
+
+// ===== GITHUB API SYNC =====
+function saveGhSettings() {
+  const token = document.getElementById('ghToken').value.trim();
+  const repo = document.getElementById('ghRepo').value.trim();
+  const path = document.getElementById('ghPath').value.trim() || 'data.json';
+  
+  if (!token || !repo) { showToast("❌ Token and Repo are required"); return; }
+  
+  localStorage.setItem('gh_token', token);
+  localStorage.setItem('gh_repo', repo);
+  localStorage.setItem('gh_path', path);
+  showToast("✅ Settings Saved! Syncing...");
+  ghSyncData();
+}
+
+function clearGhSettings() {
+  localStorage.removeItem('gh_token');
+  localStorage.removeItem('gh_repo');
+  localStorage.removeItem('gh_path');
+  document.getElementById('ghToken').value = '';
+  document.getElementById('ghRepo').value = '';
+  document.getElementById('ghPath').value = 'data.json';
+  showToast("🔌 Disconnected from GitHub");
+}
+
+let syncTimeout = null;
+function triggerBgSync() {
+  const token = localStorage.getItem('gh_token');
+  if (!token) return; // Not configured
+  
+  if (syncTimeout) clearTimeout(syncTimeout);
+  syncTimeout = setTimeout(() => {
+    ghSyncData(true);
+  }, 2500);
+}
+
+async function ghSyncData(isBackground = false) {
+  const token = localStorage.getItem('gh_token');
+  const repo = localStorage.getItem('gh_repo');
+  const path = localStorage.getItem('gh_path') || 'data.json';
+  
+  if (!token || !repo) {
+    if (!isBackground) autoFetchData();
+    return;
+  }
+  
+  try {
+    const url = `https://api.github.com/repos/${repo}/contents/${path}`;
+    const headers = { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github.v3+json' };
+    
+    // 1. Fetch remote data
+    const res = await fetch(url, { headers });
+    let remoteSha = null;
+    let remoteData = null;
+    
+    if (res.ok) {
+      const fileInfo = await res.json();
+      remoteSha = fileInfo.sha;
+      try {
+        const decoded = decodeURIComponent(escape(atob(fileInfo.content.replace(/\n/g, ''))));
+        remoteData = JSON.parse(decoded);
+      } catch (e) { console.error("Failed to parse remote data", e); }
+    } else if (res.status !== 404) {
+      if (!isBackground) showToast("❌ GitHub API Error: " + res.status);
+      return;
+    }
+    
+    const localTs = parseInt(localStorage.getItem('sync_timestamp') || '0', 10);
+    const remoteTs = remoteData?.timestamp || 0;
+    
+    // 2. Read or Write
+    if (remoteTs > localTs && !isBackground) {
+      if (importDataStr(JSON.stringify(remoteData), false)) {
+        showToast("🔄 Synced from GitHub API!");
+        renderDaily();
+        if (currentTab === 'roadmap') renderRoadmap();
+      }
+    } else if (localTs > remoteTs || (isBackground && localTs >= remoteTs)) {
+      const localData = getAllData();
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(localData, null, 2))));
+      
+      const body = { message: "Tracker auto-sync", content: content };
+      if (remoteSha) body.sha = remoteSha;
+      
+      const putRes = await fetch(url, { method: 'PUT', headers, body: JSON.stringify(body) });
+      if (putRes.ok) {
+        if (!isBackground) showToast("✅ Backed up to GitHub!");
+      } else {
+        if (!isBackground) showToast("❌ Failed to backup: " + putRes.status);
+      }
+    } else {
+      if (!isBackground) showToast("✅ Already up to date");
+    }
+    
+  } catch (e) {
+    console.error("GitHub Sync Error", e);
+    if (!isBackground) showToast("❌ Sync Error. Check console.");
+  }
+}
+
+// Fallback for non-API sync
+async function autoFetchData() {
+  try {
+    const res = await fetch('data.json?t=' + Date.now());
+    if (res.ok) {
+      const remoteData = await res.json();
+      const localTs = parseInt(localStorage.getItem('sync_timestamp') || '0', 10);
+      const remoteTs = remoteData.timestamp || 0;
+      if (remoteTs > localTs) {
+        if (importDataStr(JSON.stringify(remoteData), false)) {
+          showToast("🔄 Synced from local data.json!");
+          renderDaily();
+          if (currentTab === 'roadmap') renderRoadmap();
+        }
+      }
+    }
+  } catch (e) {
+    // Ignore fetch errors
+  }
+}
+
 // ===== INIT =====
 renderMotivation();
 renderDaily();
+if (localStorage.getItem('gh_token')) {
+  ghSyncData();
+} else {
+  autoFetchData();
+}
 
 </script>
 </body>
