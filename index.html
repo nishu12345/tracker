@@ -3,13 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Nishant's Daily Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Nishant's Tracker — Daily Habits & Career Roadmap</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0a0a0f;
     --surface: #13131a;
     --surface2: #1a1a24;
+    --surface3: #22222e;
     --border: #2a2a3a;
     --text: #e8e8f0;
     --text-dim: #7a7a8e;
@@ -21,6 +22,10 @@
     --red-bg: rgba(248, 113, 113, 0.1);
     --accent: #818cf8;
     --accent-bg: rgba(129, 140, 248, 0.08);
+    --purple: #a78bfa;
+    --blue: #60a5fa;
+    --orange: #fb923c;
+    --pink: #f472b6;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,38 +35,125 @@
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
-    padding: 16px;
+    padding: 12px;
     -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
   }
 
-  .header {
+  /* ===== HEADER ===== */
+  .app-header {
     text-align: center;
-    padding: 20px 0 24px;
+    padding: 16px 0 8px;
   }
 
-  .header h1 {
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
+  .app-title {
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
     background: linear-gradient(135deg, var(--accent), var(--green));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ===== TABS ===== */
+  .tab-bar {
+    display: flex;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 4px;
+    margin: 12px auto 16px;
+    max-width: 320px;
+  }
+
+  .tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 8px;
+    border-radius: 11px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .tab-btn.active {
+    background: var(--accent-bg);
+    color: var(--accent);
+    box-shadow: 0 2px 12px rgba(129, 140, 248, 0.15);
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ===== MOTIVATION BANNER ===== */
+  .motivation-banner {
+    background: linear-gradient(135deg, rgba(129,140,248,0.08), rgba(52,211,153,0.06));
+    border: 1px solid rgba(129,140,248,0.15);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .motivation-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 50%, rgba(129,140,248,0.04), transparent 50%);
+    animation: shimmer 8s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0%, 100% { transform: translateX(-10%) translateY(-10%); }
+    50% { transform: translateX(10%) translateY(10%); }
+  }
+
+  .motivation-icon { font-size: 20px; margin-bottom: 6px; display: block; }
+
+  .motivation-text {
+    font-size: 12.5px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--text);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== DAILY TAB ===== */
+  .daily-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 4px 0 12px;
   }
 
   .month-nav {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 12px;
+    gap: 16px;
   }
 
   .month-nav button {
     background: var(--surface2);
     border: 1px solid var(--border);
     color: var(--text);
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     border-radius: 10px;
     font-size: 16px;
     cursor: pointer;
@@ -74,18 +166,34 @@
   .month-nav button:active { background: var(--border); }
 
   .month-label {
-    font-size: 17px;
-    font-weight: 600;
-    min-width: 160px;
+    font-size: 16px;
+    font-weight: 700;
+    min-width: 150px;
     text-align: center;
   }
+
+  .settings-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+  }
+
+  .settings-btn:active { transform: rotate(60deg); }
 
   /* Stats bar */
   .stats-bar {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     justify-content: center;
-    margin: 16px 0 20px;
+    margin: 0 0 14px;
     flex-wrap: wrap;
   }
 
@@ -93,25 +201,47 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 10px;
-    padding: 8px 14px;
+    padding: 8px 12px;
     text-align: center;
-    min-width: 70px;
+    min-width: 64px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
   }
 
-  .stat-value {
-    font-size: 20px;
-    font-weight: 700;
-  }
+  .stat:active { transform: scale(0.95); }
 
+  .stat-value { font-size: 20px; font-weight: 700; }
   .stat-label {
-    font-size: 10px;
+    font-size: 9px;
     color: var(--text-dim);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-top: 2px;
   }
 
-  /* Calendar grid */
+  .stat-tooltip {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface3);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 11px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 50;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .stat.show-tip .stat-tooltip { opacity: 1; }
+
+  /* Calendar */
   .weekday-headers {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -121,10 +251,10 @@
 
   .weekday-header {
     text-align: center;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     color: var(--text-dim);
-    padding: 6px 0;
+    padding: 5px 0;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
@@ -139,70 +269,46 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 10px;
-    padding: 6px 4px;
-    min-height: 58px;
+    padding: 5px 3px;
+    min-height: 54px;
     cursor: pointer;
     transition: all 0.2s;
     position: relative;
   }
 
-  .day-cell.empty {
-    background: transparent;
-    border-color: transparent;
-    cursor: default;
-  }
+  .day-cell.empty { background: transparent; border-color: transparent; cursor: default; }
+  .day-cell.today { border-color: var(--accent); box-shadow: 0 0 12px rgba(129, 140, 248, 0.2); }
+  .day-cell.future { opacity: 0.35; }
 
-  .day-cell.today {
-    border-color: var(--accent);
-    box-shadow: 0 0 12px rgba(129, 140, 248, 0.2);
-  }
+  .day-num { font-size: 11px; font-weight: 700; text-align: center; margin-bottom: 3px; color: var(--text); }
+  .day-cell.today .day-num { color: var(--accent); }
 
-  .day-cell.future {
-    opacity: 0.35;
-  }
-
-  .day-num {
-    font-size: 12px;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 4px;
-    color: var(--text);
-  }
-
-  .day-cell.today .day-num {
-    color: var(--accent);
-  }
-
-  .day-dots {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2px;
-    justify-content: center;
-  }
-
-  .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--border);
-    transition: background 0.2s;
-  }
-
+  .day-dots { display: flex; flex-wrap: wrap; gap: 2px; justify-content: center; }
+  .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--border); transition: background 0.2s; }
   .dot.done { background: var(--green); }
 
-  /* Mode indicator */
-  .mode-bar {
-    height: 3px;
-    border-radius: 2px;
-    margin-top: 4px;
-    background: transparent;
-  }
-
+  .mode-bar { height: 3px; border-radius: 2px; margin-top: 3px; background: transparent; }
   .mode-bar.green { background: var(--green); }
   .mode-bar.yellow { background: var(--yellow); }
   .mode-bar.red { background: var(--red); }
 
-  /* Day detail modal */
+  /* Legend */
+  .legend { display: flex; justify-content: center; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--text-dim); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* Streak */
+  .streak-banner { text-align: center; margin: 10px 0 0; font-size: 13px; color: var(--text-dim); }
+  .streak-banner span { color: var(--green); font-weight: 700; }
+
+  .streak-fire { display: inline-block; }
+  .streak-fire.pulse { animation: firePulse 1.5s ease-in-out infinite; }
+  @keyframes firePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); filter: brightness(1.3); }
+  }
+
+  /* ===== MODALS ===== */
   .modal-overlay {
     display: none;
     position: fixed;
@@ -216,44 +322,44 @@
     padding: 16px;
   }
 
-  .modal-overlay.active {
-    display: flex;
-  }
+  .modal-overlay.active { display: flex; }
 
   .modal {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 20px;
-    padding: 24px;
+    padding: 20px;
     width: 100%;
-    max-width: 400px;
-    margin-bottom: 20px;
+    max-width: 420px;
+    margin-bottom: 16px;
     animation: slideUp 0.3s ease;
+    max-height: 80vh;
+    overflow-y: auto;
   }
+
+  .modal::-webkit-scrollbar { width: 4px; }
+  .modal::-webkit-scrollbar-track { background: transparent; }
+  .modal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
   @keyframes slideUp {
     from { transform: translateY(40px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
   }
 
-  .modal-date {
-    font-size: 18px;
+  .modal-title {
+    font-size: 17px;
     font-weight: 700;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     text-align: center;
   }
 
-  .habit-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+  .habit-list { display: flex; flex-direction: column; gap: 8px; }
 
   .habit-row {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 12px 16px;
+    gap: 12px;
+    padding: 11px 14px;
     background: var(--surface2);
     border: 1px solid var(--border);
     border-radius: 12px;
@@ -263,18 +369,12 @@
     user-select: none;
   }
 
-  .habit-row:active {
-    transform: scale(0.98);
-  }
-
-  .habit-row.checked {
-    background: var(--green-bg);
-    border-color: rgba(52, 211, 153, 0.3);
-  }
+  .habit-row:active { transform: scale(0.98); }
+  .habit-row.checked { background: var(--green-bg); border-color: rgba(52, 211, 153, 0.3); }
 
   .habit-check {
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
     border-radius: 7px;
     border: 2px solid var(--border);
     display: flex;
@@ -282,49 +382,26 @@
     justify-content: center;
     flex-shrink: 0;
     transition: all 0.2s;
-    font-size: 14px;
+    font-size: 13px;
   }
 
-  .habit-row.checked .habit-check {
-    background: var(--green);
-    border-color: var(--green);
-  }
-
-  .habit-icon { font-size: 18px; flex-shrink: 0; }
-
-  .habit-name {
-    font-size: 15px;
-    font-weight: 500;
-    flex: 1;
-  }
+  .habit-row.checked .habit-check { background: var(--green); border-color: var(--green); }
+  .habit-icon { font-size: 17px; flex-shrink: 0; }
+  .habit-name { font-size: 14px; font-weight: 500; flex: 1; }
 
   .modal-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
-    padding-top: 16px;
+    margin-top: 16px;
+    padding-top: 14px;
     border-top: 1px solid var(--border);
   }
 
-  .modal-score {
-    font-size: 14px;
-    color: var(--text-dim);
-  }
+  .modal-score { font-size: 13px; color: var(--text-dim); }
+  .modal-score span { font-weight: 700; font-size: 17px; color: var(--text); }
 
-  .modal-score span {
-    font-weight: 700;
-    font-size: 18px;
-    color: var(--text);
-  }
-
-  .modal-mode {
-    font-size: 13px;
-    font-weight: 600;
-    padding: 4px 12px;
-    border-radius: 20px;
-  }
-
+  .modal-mode { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 20px; }
   .modal-mode.green { background: var(--green-bg); color: var(--green); }
   .modal-mode.yellow { background: var(--yellow-bg); color: var(--yellow); }
   .modal-mode.red { background: var(--red-bg); color: var(--red); }
@@ -333,13 +410,14 @@
   .close-btn {
     display: block;
     width: 100%;
-    margin-top: 16px;
-    padding: 14px;
+    margin-top: 14px;
+    padding: 12px;
     background: var(--surface2);
     border: 1px solid var(--border);
     border-radius: 12px;
     color: var(--text);
-    font-size: 15px;
+    font-family: inherit;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     text-align: center;
@@ -348,186 +426,869 @@
 
   .close-btn:active { background: var(--border); }
 
-  /* Legend */
-  .legend {
+  /* ===== SETTINGS MODAL ===== */
+  .settings-habit {
     display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 6px;
+  }
+
+  .settings-habit .habit-icon { font-size: 18px; }
+  .settings-habit .habit-name { font-size: 14px; font-weight: 500; flex: 1; }
+
+  .settings-remove {
+    background: none;
+    border: none;
+    color: var(--red);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: background 0.2s;
+    line-height: 1;
+  }
+
+  .settings-remove:active { background: var(--red-bg); }
+
+  .add-habit-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .add-habit-row input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .add-habit-row input:focus { border-color: var(--accent); }
+
+  .add-habit-row input.emoji-input { width: 50px; flex: none; text-align: center; font-size: 18px; }
+
+  .add-habit-btn {
+    background: var(--accent);
+    border: none;
+    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+  }
+
+  .add-habit-btn:active { opacity: 0.8; }
+
+  /* ===== ROADMAP TAB ===== */
+  .roadmap-overview {
+    display: flex;
+    gap: 10px;
+    align-items: center;
     justify-content: center;
-    gap: 16px;
-    margin-top: 16px;
+    margin-bottom: 16px;
     flex-wrap: wrap;
   }
 
-  .legend-item {
+  .progress-ring-wrap {
+    position: relative;
+    cursor: pointer;
+    width: 72px;
+    height: 72px;
+  }
+
+  .progress-ring-wrap svg { transform: rotate(-90deg); }
+
+  .progress-ring-bg {
+    fill: none;
+    stroke: var(--border);
+    stroke-width: 5;
+  }
+
+  .progress-ring-fill {
+    fill: none;
+    stroke: url(#progressGrad);
+    stroke-width: 5;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.8s ease;
+  }
+
+  .progress-ring-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  .progress-ring-label {
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 8px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+
+  .xp-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 100px;
+  }
+
+  .xp-card:active { transform: scale(0.95); }
+
+  .xp-level { font-size: 11px; font-weight: 700; color: var(--purple); text-transform: uppercase; letter-spacing: 0.5px; }
+  .xp-value { font-size: 20px; font-weight: 800; color: var(--text); margin: 2px 0; }
+  .xp-bar-outer { height: 4px; background: var(--border); border-radius: 2px; margin-top: 4px; overflow: hidden; }
+  .xp-bar-inner { height: 100%; background: linear-gradient(90deg, var(--accent), var(--green)); border-radius: 2px; transition: width 0.8s ease; }
+
+  /* Milestones */
+  .milestones {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .milestone {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 11px;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    opacity: 0.3;
+    filter: grayscale(1);
+  }
+
+  .milestone.earned {
+    opacity: 1;
+    filter: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 12px rgba(129, 140, 248, 0.2);
+    animation: badgeEarn 0.5s ease;
+  }
+
+  @keyframes badgeEarn { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+
+  .milestone-tip {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 10px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 50;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .milestone.show-tip .milestone-tip { opacity: 1; }
+
+  /* Roadmap sections */
+  .roadmap-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: all 0.2s;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: background 0.2s;
+  }
+
+  .section-header:active { background: var(--surface2); }
+
+  .section-icon { font-size: 22px; flex-shrink: 0; }
+
+  .section-info { flex: 1; min-width: 0; }
+  .section-title { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .section-subtitle { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+
+  .section-badge {
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+
+  .section-badge:active { transform: scale(1.3); }
+
+  .section-progress-wrap { flex-shrink: 0; width: 50px; }
+  .section-progress-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .section-progress-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+
+  .section-pct { font-size: 10px; color: var(--text-dim); text-align: right; margin-top: 2px; }
+
+  .section-arrow {
+    font-size: 12px;
     color: var(--text-dim);
+    transition: transform 0.3s;
+    flex-shrink: 0;
   }
 
-  .legend-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
+  .roadmap-section.expanded .section-arrow { transform: rotate(90deg); }
+
+  .section-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
   }
 
-  /* Streak banner */
-  .streak-banner {
-    text-align: center;
-    margin: 12px 0 0;
-    font-size: 13px;
-    color: var(--text-dim);
+  .roadmap-section.expanded .section-body {
+    max-height: 5000px;
+    transition: max-height 0.6s ease-in;
   }
 
-  .streak-banner span {
-    color: var(--green);
+  .group-title {
+    font-size: 12px;
     font-weight: 700;
+    color: var(--accent);
+    padding: 10px 16px 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
   }
 
+  .roadmap-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 9px 16px;
+    cursor: pointer;
+    transition: background 0.15s;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .roadmap-item:active { background: var(--surface2); }
+
+  .roadmap-check {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    font-size: 11px;
+    margin-top: 1px;
+  }
+
+  .roadmap-item.done .roadmap-check { background: var(--green); border-color: var(--green); }
+  .roadmap-item.done .roadmap-item-text { color: var(--text-dim); text-decoration: line-through; text-decoration-color: var(--border); }
+
+  .roadmap-item-text { font-size: 13px; line-height: 1.4; flex: 1; }
+
+  .section-divider { height: 1px; background: var(--border); margin: 4px 16px; }
+
+  /* ===== TOAST ===== */
+  .toast-container {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none;
+  }
+
+  .toast {
+    background: linear-gradient(135deg, var(--surface3), var(--surface2));
+    border: 1px solid var(--green);
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  .toast.xp-toast {
+    border-color: var(--purple);
+    color: var(--purple);
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  /* ===== RESPONSIVE ===== */
   @media (min-width: 500px) {
-    .day-cell { min-height: 70px; padding: 8px 6px; }
-    .day-num { font-size: 13px; }
-    .dot { width: 7px; height: 7px; }
-    body { padding: 24px; max-width: 600px; margin: 0 auto; }
+    body { padding: 20px; max-width: 600px; margin: 0 auto; }
+    .day-cell { min-height: 68px; padding: 7px 5px; }
+    .day-num { font-size: 12px; }
+    .dot { width: 6px; height: 6px; }
+    .roadmap-item-text { font-size: 14px; }
   }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>DAILY TRACKER</h1>
-  <div class="month-nav">
-    <button id="prevMonth">‹</button>
-    <div class="month-label" id="monthLabel"></div>
-    <button id="nextMonth">›</button>
+<!-- SVG gradient definition for progress ring -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="progressGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#818cf8" />
+      <stop offset="100%" stop-color="#34d399" />
+    </linearGradient>
+  </defs>
+</svg>
+
+<div class="app-header">
+  <div class="app-title">NISHANT'S TRACKER</div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="daily" onclick="switchTab('daily')">📅 Daily</button>
+  <button class="tab-btn" data-tab="roadmap" onclick="switchTab('roadmap')">🗺️ Roadmap</button>
+</div>
+
+<!-- ===== DAILY TAB ===== -->
+<div id="dailyView" class="tab-content active">
+  <div id="dailyMotivation" class="motivation-banner"></div>
+
+  <div class="daily-header">
+    <div class="month-nav">
+      <button id="prevMonth">‹</button>
+      <div class="month-label" id="monthLabel"></div>
+      <button id="nextMonth">›</button>
+    </div>
+    <button class="settings-btn" onclick="openSettings()">⚙️</button>
   </div>
+
+  <div class="stats-bar" id="statsBar"></div>
+
+  <div class="weekday-headers">
+    <div class="weekday-header">Mon</div>
+    <div class="weekday-header">Tue</div>
+    <div class="weekday-header">Wed</div>
+    <div class="weekday-header">Thu</div>
+    <div class="weekday-header">Fri</div>
+    <div class="weekday-header">Sat</div>
+    <div class="weekday-header">Sun</div>
+  </div>
+
+  <div class="calendar-grid" id="calendarGrid"></div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Done</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--border)"></div>Missed</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--green);width:14px;height:4px;border-radius:2px"></div>🟢 Full</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--yellow);width:14px;height:4px;border-radius:2px"></div>🟡 Min</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--red);width:14px;height:4px;border-radius:2px"></div>🔴 Low</div>
+  </div>
+
+  <div class="streak-banner" id="streakBanner"></div>
 </div>
 
-<div class="stats-bar" id="statsBar"></div>
+<!-- ===== ROADMAP TAB ===== -->
+<div id="roadmapView" class="tab-content">
+  <div id="roadmapMotivation" class="motivation-banner"></div>
 
-<div class="weekday-headers">
-  <div class="weekday-header">Mon</div>
-  <div class="weekday-header">Tue</div>
-  <div class="weekday-header">Wed</div>
-  <div class="weekday-header">Thu</div>
-  <div class="weekday-header">Fri</div>
-  <div class="weekday-header">Sat</div>
-  <div class="weekday-header">Sun</div>
+  <div class="roadmap-overview">
+    <div class="progress-ring-wrap" onclick="flashRingDetail()" id="progressRingWrap">
+      <svg width="72" height="72">
+        <circle class="progress-ring-bg" cx="36" cy="36" r="30" />
+        <circle class="progress-ring-fill" id="progressRingFill" cx="36" cy="36" r="30"
+          stroke-dasharray="188.5" stroke-dashoffset="188.5" />
+      </svg>
+      <div class="progress-ring-text" id="progressRingText">0%</div>
+    </div>
+    <div class="xp-card" onclick="flashXpDetail()">
+      <div class="xp-level" id="xpLevel">Level 1</div>
+      <div class="xp-value" id="xpValue">0 XP</div>
+      <div class="xp-bar-outer"><div class="xp-bar-inner" id="xpBar" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="milestones" id="milestones"></div>
+
+  <div id="roadmapSections"></div>
 </div>
 
-<div class="calendar-grid" id="calendarGrid"></div>
-
-<div class="legend">
-  <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Done</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--border)"></div> Missed</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--green);width:16px;height:4px;border-radius:2px"></div> 🟢 4+</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--yellow);width:16px;height:4px;border-radius:2px"></div> 🟡 2-3</div>
-  <div class="legend-item"><div class="legend-dot" style="background:var(--red);width:16px;height:4px;border-radius:2px"></div> 🔴 1</div>
-</div>
-
-<div class="streak-banner" id="streakBanner"></div>
-
-<div class="modal-overlay" id="modalOverlay">
+<!-- ===== DAY DETAIL MODAL ===== -->
+<div class="modal-overlay" id="dayModal">
   <div class="modal">
-    <div class="modal-date" id="modalDate"></div>
+    <div class="modal-title" id="modalDate"></div>
     <div class="habit-list" id="habitList"></div>
     <div class="modal-footer">
-      <div class="modal-score">Score: <span id="modalScore">0/6</span></div>
+      <div class="modal-score">Score: <span id="modalScore">0/0</span></div>
       <div class="modal-mode" id="modalMode"></div>
     </div>
-    <button class="close-btn" id="closeModal">Done</button>
+    <button class="close-btn" onclick="closeDayModal()">Done</button>
   </div>
 </div>
 
+<!-- ===== SETTINGS MODAL ===== -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <div class="modal-title">⚙️ Customize Habits</div>
+    <div id="settingsHabitList"></div>
+    <div class="add-habit-row">
+      <input class="emoji-input" id="newHabitIcon" placeholder="🎯" maxlength="4">
+      <input id="newHabitName" placeholder="Habit name...">
+      <button class="add-habit-btn" onclick="addHabit()">Add</button>
+    </div>
+    <button class="close-btn" onclick="closeSettings()">Done</button>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
 <script>
-const WEEKDAY_HABITS = [
-  { key: 'study',    icon: '📖', name: 'Study' },
-  { key: 'gym',      icon: '🏋️', name: 'Gym' },
-  { key: 'am_skin',  icon: '🧴', name: 'AM Skincare' },
-  { key: 'pm_skin',  icon: '🌙', name: 'PM Skincare' },
-  { key: 'meal1',    icon: '🍽️', name: 'Meal 1' },
-  { key: 'meal2',    icon: '🍽️', name: 'Meal 2' },
-];
-
-const WEEKEND_HABITS = [
-  { key: 'study',    icon: '📖', name: 'Study' },
-  { key: 'movement', icon: '🚶', name: 'Movement' },
-  { key: 'am_skin',  icon: '🧴', name: 'AM Skincare' },
-  { key: 'pm_skin',  icon: '🌙', name: 'PM Skincare' },
-  { key: 'meal1',    icon: '🍽️', name: 'Meal 1' },
-  { key: 'meal2',    icon: '🍽️', name: 'Meal 2' },
-];
-
+// ===== CONSTANTS =====
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const DAYS_FULL = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
-let currentYear = 2026;
-let currentMonth = 4; // May (0-indexed)
+const DEFAULT_HABITS = [
+  { key: 'study',   icon: '📖', name: 'Study' },
+  { key: 'gym',     icon: '🏋️', name: 'Gym' },
+  { key: 'am_skin', icon: '🧴', name: 'AM Skincare' },
+  { key: 'pm_skin', icon: '🌙', name: 'PM Skincare' },
+  { key: 'meal1',   icon: '🍽️', name: 'Meal 1' },
+  { key: 'meal2',   icon: '🍽️', name: 'Meal 2' },
+];
+
+// ===== MOTIVATIONAL MESSAGES =====
+const MOTIVATIONS = [
+  { icon: '💰', text: "Every hour you invest today is worth $100/hour in your future Staff salary. Keep compounding." },
+  { icon: '📈', text: "93% of developers never invest in deep learning after work. You're in the 7% who will win." },
+  { icon: '🎯', text: "The gap between $120K Senior and $250K Staff isn't talent — it's showing up consistently." },
+  { icon: '🦋', text: "Senior → Staff isn't a promotion. It's a transformation. You're already transforming." },
+  { icon: '🏆', text: "While others binge Netflix, you're building the portfolio that gets $200K+ offers." },
+  { icon: '📊', text: "Compound learning: 1% better daily = 37x better in a year. Keep the streak alive." },
+  { icon: '💎', text: "Your GitHub portfolio is your resume that never lies. Every commit is an investment." },
+  { icon: '🏗️', text: "Staff Engineers don't just write code — they shape systems. You're becoming that person." },
+  { icon: '🌍', text: "Global remote Staff roles go to engineers who prove depth. That's exactly what you're doing." },
+  { icon: '🚀', text: "Most developers plateau at Senior. You chose growth. That's already rare." },
+  { icon: '⚡', text: "Every NeetCode problem you solve is interview prep that your competitors won't bother doing." },
+  { icon: '👑', text: "Your future CTO doesn't know your name yet. Keep building until they have to learn it." },
+  { icon: '🏅', text: "DDIA, Effective Java, JCiP — when you finish these, you'll be in the top 1% of backend engineers." },
+  { icon: '🔥', text: "The engineers who changed the industry didn't wait for permission. Neither are you." },
+  { icon: '💪', text: "Today's discomfort is tomorrow's confidence in system design interviews." },
+  { icon: '📈', text: "You're not just studying — you're investing in decades of higher earnings." },
+  { icon: '🎯', text: "When you understand distributed systems at depth, every interview becomes a conversation, not a test." },
+  { icon: '🌟', text: "OSS contributions + blog posts + deep knowledge = the trifecta that makes offers chase YOU." },
+  { icon: '⏰', text: "The best time to start was 5 years ago. The second best time is today. And you started." },
+  { icon: '📋', text: "You're building a body of evidence that screams 'Staff Engineer'. Keep stacking." },
+  { icon: '🙏', text: "In 16 months, you'll look back at today and be grateful you didn't quit." },
+  { icon: '✍️', text: "Each blog post you write signals to top companies: this engineer thinks deeply." },
+  { icon: '💵', text: "Remote Staff roles at US companies pay $200-350K. Every hour of study narrows that gap." },
+  { icon: '🎓', text: "The engineers who earn the most aren't the smartest — they're the most prepared." },
+  { icon: '🏦', text: "Your staff-evidence repo is career insurance. Each artifact adds a zero to your worth." },
+  { icon: '⭐', text: "Consistency is a superpower. Most quit in month 2. You're still here." },
+  { icon: '🎮', text: "Think of each completed sprint as leveling up in a game where the reward is real money." },
+  { icon: '🛤️', text: "The interviews that terrify you now will feel routine after this roadmap." },
+  { icon: '🎤', text: "You're building the depth that makes senior engineers ask YOU for advice." },
+  { icon: '🏧', text: "This isn't just a career roadmap. It's a wealth-building machine. Trust the process." },
+];
+
+// ===== PRAISE MESSAGES (shown after checking a daily habit) =====
+const PRAISE_DAILY = [
+  "Locked in 🔒",
+  "Future Staff Engineer move 💰",
+  "Discipline > Motivation 💪",
+  "Your competitors just hit snooze 😴",
+  "That's the 1% mentality ⚡",
+  "Consistency = Compound growth 📈",
+  "One step closer to $250K 💵",
+  "Winners show up. You showed up. 🏆",
+  "The grind IS the glory ✨",
+  "Your future self just smiled 😊",
+  "Most skip this. Not you. 🚀",
+  "Staff-level discipline 🎯",
+  "Small steps, massive results 🏗️",
+  "Another brick in the wall of greatness 🧱",
+  "Checked off. Leveled up. 🎮",
+];
+
+const PRAISE_ROADMAP = [
+  "Knowledge unlocked 🔓",
+  "One less thing between you and Staff 🏆",
+  "Progress is addictive, isn't it? 📈",
+  "Your brain just got an upgrade 🧠",
+  "Skill tree expanding... ⚡",
+  "That's worth $1000 in future salary 💰",
+  "Career level up imminent 🚀",
+  "The portfolio just got stronger 💎",
+  "Keep this pace and offers will chase YOU 🏃",
+  "Another checkbox = another edge over 99% of devs 📊",
+];
+
+const PRAISE_ALL_DONE = [
+  "ALL DONE! Perfect day. You're unstoppable! 🏆🔥",
+  "Clean sweep! This is what Staff Engineers are made of! 💎",
+  "100% today. The compound effect is REAL! 📈✨",
+];
+
+// ===== ROADMAP DATA =====
+const ROADMAP = [
+  {
+    id: 'ai', title: 'AI Fluency', subtitle: '10 Weeks → AI-curious to AI-fluent', icon: '🤖', storageKey: 'rm_ai',
+    groups: [
+      { title: 'Week 1-2: How LLMs Actually Work', items: [
+        'Andrej Karpathy — "Deep Dive into LLMs like ChatGPT" (full video)',
+        'Anthropic Academy — Claude 101 (earn certificate)',
+        'Hands-on: Temperature experiments across Gemini / Claude / ChatGPT',
+        'OpenAI API docs + Playground (Chat Completions, roles, system messages)',
+        'Anthropic Academy — AI Fluency: Framework & Foundations (full course + cert)',
+        'Set up project memory files (CLAUDE.md, GEMINI.md, .cursorrules)',
+        'NotebookLM experiment — upload book chapter, generate study guide & quiz',
+      ]},
+      { title: 'Week 3-5: Context Engineering', items: [
+        'Anthropic Prompt Engineering Tutorial — all chapters (Ch 1-9) + exercises',
+        'Practice at work — apply prompt techniques to a real Angular task',
+        'DeepLearning.AI — ChatGPT Prompt Engineering for Developers (full course)',
+        'DeepLearning.AI — Building Systems with the ChatGPT API (full course)',
+        'Install + try Claude Code CLI (repo-wide operations)',
+        'Create reusable context template (CLAUDE.md / GEMINI.md for your project)',
+        'Aider experiment — install, try /architect mode on a small refactor',
+        'Review + solidify hardest exercises from Anthropic tutorial',
+        'Apply Claude Code at work — full week of real-task practice',
+        'Write "What I learned about AI in 5 weeks" reflection doc',
+      ]},
+      { title: 'Week 6-9: RAG, Agents, MCP, Graphs', items: [
+        'LLM Zoomcamp — Module 1: Intro to LLM + RAG pipeline',
+        'LLM Zoomcamp — Module 2: Open-source LLMs + Ollama in RAG',
+        'LLM Zoomcamp — Module 3: Vector search & embeddings deep dive',
+        'Install Ollama + run local models + configure Continue.dev plugin',
+        'Anthropic Academy — Introduction to MCP (Host, Client, Server, Tools)',
+        'Microsoft mcp-for-beginners — read intro + Java examples',
+        'Hands-on MCP: Connect an MCP server to Claude Desktop / IDE',
+        'HuggingFace AI Agents Course (Units 1-3: fundamentals → frameworks → real agent)',
+        'Claude Code sub-agents — read docs, try /spawn command',
+        'Addy Osmani — "Loop Engineering" article (Reason→Act→Observe pattern)',
+        'LangChain — "Graph Engineering" blog + Intro to LangGraph video',
+        'Mental Model Exercise — draw agent graph for an Angular task on paper',
+        'Spec-Driven Development article + GitHub Spec Kit experiment',
+        'Write one-pager: RAG, MCP, Agents, Sub-Agents, Graph Eng explained',
+        'Buffer week W9: catch up or build a small agent demo',
+      ]},
+      { title: 'Week 10: Production AI + Your Java World', items: [
+        'Spring AI docs — Getting Started, ChatClient, RAG, Function Calling',
+        'Ship Spring AI endpoint (POST /ask) to GitHub — portfolio piece',
+        'LLM Zoomcamp — Modules 4 & 5: Evaluation + Monitoring',
+        'Production concerns + set up "Stay Current" system (Section E)',
+      ]},
+    ]
+  },
+  {
+    id: 'sprint1', title: 'Sprint 1: Java Rebuild + System Design', subtitle: 'Wk 1-13 → Core Java, DDIA foundations, first projects', icon: '☕', storageKey: 'rm_s1',
+    groups: [{ title: 'Sprint 1 — Week by Week', items: [
+      'Wk 1 — DDIA Ch 1: Trade-Offs • Binary Search • Setup repos & NotebookLM',
+      'Wk 2 — DDIA Ch 2: Nonfunctional Req • Grokking Ch 1 finish • First ADR',
+      'Wk 3 — Core Java Ch 4: Objects & Classes • Arrays/Linked Lists • Project 1 kickoff',
+      'Wk 4 — Core Java Ch 4 finish • Grokking Ch 2 finish • Project 1 continues',
+      'Wk 5 — DDIA Ch 3 first half • Recursion • Review',
+      'Wk 6 — DDIA Ch 3 finish • Grokking Ch 3 finish • Project 1 continues',
+      'Wk 7 — Core Java Ch 5: Inheritance • Quicksort • Project 1 done → push to GitHub',
+      'Wk 8 — Core Java Ch 5 finish • Grokking Ch 4 finish • Staff artifact #2',
+      'Wk 9 — DDIA Ch 4 first half • Hash Tables • Project 2 kickoff',
+      'Wk 10 — DDIA Ch 4 finish • Grokking Ch 5 finish • Project 2 continues',
+      'Wk 11 — Core Java Ch 6: Interfaces & Lambda • Sliding Window • Project 2 done → push',
+      'Wk 12 — Review DDIA Ch 1-4 • NeetCode catch-up • Write first blog post',
+      'Wk 13 — Buffer week • Sprint retro • Choose OSS target project',
+    ]}]
+  },
+  {
+    id: 'sprint2', title: 'Sprint 2: Java Complete + LLD + Modern Java', subtitle: 'Wk 14-25 → Finish Core Java, design patterns, Streams', icon: '🔧', storageKey: 'rm_s2',
+    groups: [{ title: 'Sprint 2 — Week by Week', items: [
+      'Wk 14 — DDIA Ch 5: Encoding • BFS/Graphs • OSS: Open issue / read contributing guide',
+      'Wk 15 — DDIA Ch 6-7: Replication & Partitioning • Trees • First OSS PR (doc/test fix)',
+      'Wk 16 — Core Java Ch 7: Exceptions & Logging • Trees continued • Review',
+      'Wk 17 — Core Java Ch 7 finish • BST, Kth Smallest • Staff artifact #3 (tech-debt proposal)',
+      'Wk 18 — Core Java Ch 8: Generics • Linked Lists • Apply generics at work',
+      'Wk 19 — Core Java Ch 9: Collections ★ CORE JAVA DONE • Linked Lists • Blog #2',
+      'Wk 20 — HFDP Ch 1-2: Strategy + Observer • Stack problems • OSS code contribution PR',
+      'Wk 21 — HFDP Ch 3-4: Decorator + Factory • Two Pointers • Continue HFDP',
+      'Wk 22 — HFDP Ch 5-7: Singleton + Command + Adapter • Sliding Window • Project 3 kickoff',
+      'Wk 23 — HFDP Ch 8-11: Template, Iterator, State • Greedy • Project 3 continues',
+      'Wk 24 — HFDP Ch 12-14: Proxy, Compound • Binary Search • Project 3 done + Streams intro',
+      'Wk 25 — Modern Java: Streams + CompletableFuture • Catch-up • Blog #3 + Sprint retro',
+    ]}]
+  },
+  {
+    id: 'sprint3', title: 'Sprint 3: Distributed Systems + Spring + SQL', subtitle: 'Wk 26-38 → DDIA finish, Spring, SQL perf, networking', icon: '🏗️', storageKey: 'rm_s3',
+    groups: [{ title: 'Sprint 3 — Week by Week', items: [
+      'Wk 26 — DDIA Ch 8: Transactions • DP: Coin Change, LIS • Design Twitter Feed',
+      'Wk 27 — DDIA Ch 9 first half • DP: Word Break • System design continued',
+      'Wk 28 — DDIA Ch 9 finish + Ch 10 start • Backtracking • OSS: Find substantive bug/feature',
+      'Wk 29 — DDIA Ch 10 finish • Backtracking: Permutations • Project 4 kickoff',
+      'Wk 30 — Spring Ch 3 (Data) + DDIA Ch 11 • Heap: Merge K Sorted • Project 4 continues',
+      'Wk 31 — Spring Ch 6-7 (REST) + DDIA Ch 12 • Intervals • Design WhatsApp',
+      'Wk 32 — Spring Ch 9 (Kafka) • Intervals + Tries • Break & Fix Lab #2: Kafka failures',
+      'Wk 33 — Spring Ch 10 (Integration) • Tries continued • Project 4 + retries + DLQ',
+      'Wk 34 — Spring Ch 15 (Actuator) + DDIA Ch 13 • Binary Search • System design mock #1',
+      'Wk 35 — HPBN Ch 1-4 + DDIA Ch 14 ★ DDIA DONE • Sliding Window • Break & Fix Lab #3',
+      'Wk 36 — SQL Perf Explained Ch 1-5 • Mock coding interview • Wireshark/tcpdump lab',
+      'Wk 37 — SQL Perf Ch 6-8 ★ SQL DONE • Mock #2 • Project 5 kickoff',
+      'Wk 38 — Sprint retro + polish • Revision: weakest 10 • Project 5 done + Blog #4',
+    ]}]
+  },
+  {
+    id: 'sprint4', title: 'Sprint 4: Java Mastery + JVM + Docker + TS', subtitle: 'Wk 39-54 → EJ, JCiP, JVM internals, Docker, TypeScript', icon: '⚙️', storageKey: 'rm_s4',
+    groups: [{ title: 'Sprint 4 — Week by Week', items: [
+      'Wk 39 — Effective Java Items 1-6: Object creation • Complete Blind 75 • OSS PR continues',
+      'Wk 40 — EJ Items 10-14: equals, hashCode • Revision • Staff artifact #5',
+      'Wk 41 — EJ Items 15-22: Classes & Interfaces • Full mock • Refactor with EJ practices',
+      'Wk 42 — EJ Items 26-33: Generics depth • Full mock #2 • Apply generics best practices',
+      'Wk 43 — EJ Items 42-48: Lambdas & Streams • Hard problems • Continue refactoring',
+      'Wk 44 — EJ Items 78-84: Concurrency ★ EJ DONE • Catch-up • Blog #5',
+      'Wk 45 — JCiP Ch 1-3: Thread safety, JMM • Catch-up • Break & Fix Lab #1: Race & Deadlock',
+      'Wk 46 — JCiP Ch 4-5: Concurrent collections • System design mock #3 • Refactor consumers',
+      'Wk 47 — JCiP Ch 10-11 ★ JCiP DONE • Revision • Break & Fix Lab #4: Memory Leak',
+      'Wk 48 — JVM Internals: heap, GC, G1, ZGC • System design mock #4 • GC log lab',
+      'Wk 49 — Docker Ch 1 + Ch 5: Overview • Final revision • Break & Fix Lab #5: Container Kill',
+      'Wk 50 — Docker Ch 6-7: Images & Containers • NeetCode final • Dockerfile for projects',
+      'Wk 51 — Docker Ch 8-9 ★ DOCKER DONE • Timed practice • Project 6: Docker Compose + observability',
+      'Wk 52 — Effective TypeScript Ch 1-3 • Mock behavioral • TS+Node conversion lab',
+      'Wk 53 — Effective TypeScript Ch 4-5 • Mock coding (TS) • Continue TS project',
+      'Wk 54 — Java 21+: Virtual Threads, Records • Timed practice • Blog #6 + OSS merged',
+    ]}]
+  },
+  {
+    id: 'sprint5', title: 'Sprint 5: Interview Prep + Job Hunt', subtitle: 'Wk 55-70 → Mock interviews, applications, offers', icon: '🎯', storageKey: 'rm_s5',
+    groups: [{ title: 'Sprint 5 — Week by Week', items: [
+      'Wk 55 — DDIA full revision Ch 1-7 • Timed NeetCode • Design Datadog',
+      'Wk 56 — DDIA revision Ch 8-14 • Timed NeetCode • Design Kafka',
+      'Wk 57 — EJ + JCiP revision (key items) • Full mock interview • System design mock #5',
+      'Wk 58 — System Design frameworks (Alex Xu Vol 1) • Full mock #2 • Mock #6',
+      'Wk 59 — System Design frameworks (Alex Xu Vol 2) • LLD: Parking Lot • LLD: Elevator',
+      'Wk 60 — Design Patterns revision (HFDP notes) • LLD: Library System • Combined mock',
+      'Wk 61 — Spring + SQL + networking revision • Mock #3 (timed) • Resume + LinkedIn polish',
+      'Wk 62 — Behavioral prep: Write 10 STAR stories • Mock behavioral • STAR review with friend',
+      'Wk 63 — Company research (Cluster A + B) • Combined mock • START APPLYING — 5 roles',
+      'Wk 64 — Applications week 1: Apply to 10 Cluster A roles • Practice • Mock with pramp/friend',
+      'Wk 65 — Applications week 2: 10 more + follow up • Continue mocks • Interview loops begin',
+      'Wk 66 — Interview loops + iterate on weak spots • Mocks • Continue interviews',
+      'Wk 67 — Interview loops + iterate • Mocks • Continue applications',
+      'Wk 68 — Interview loops + negotiation prep • Mocks • Negotiation practice',
+      'Wk 69 — Final interviews + offers • Negotiation execution (Section S.7)',
+      'Wk 70 — Decision + sign + notice period • Sprint retro • Celebrate! 🎉',
+    ]}]
+  },
+];
+
+// ===== MILESTONES =====
+const MILESTONE_DEFS = [
+  { icon: '🔓', name: 'First Step', check: (d) => d.total >= 1 },
+  { icon: '🧠', name: 'AI Aware', check: (d) => d.sections.ai === d.sectionTotals.ai },
+  { icon: '☕', name: 'Java Reborn', check: (d) => d.sections.sprint1 === d.sectionTotals.sprint1 },
+  { icon: '🏗️', name: 'Architect', check: (d) => d.sections.sprint3 === d.sectionTotals.sprint3 },
+  { icon: '🚀', name: 'Staff Ready', check: (d) => d.total === d.grandTotal },
+];
+
+// ===== XP LEVELS =====
+const XP_LEVELS = [
+  { level: 1, name: 'Beginner', min: 0, max: 100 },
+  { level: 2, name: 'Explorer', min: 100, max: 250 },
+  { level: 3, name: 'Builder', min: 250, max: 450 },
+  { level: 4, name: 'Architect', min: 450, max: 700 },
+  { level: 5, name: 'Staff', min: 700, max: Infinity },
+];
+
+// ===== STATE =====
+const now = new Date();
+let currentYear = now.getFullYear();
+let currentMonth = now.getMonth();
 let selectedDate = null;
+let currentTab = 'daily';
 
-// --- Data ---
+// ===== HELPERS =====
 function storageKey(y, m, d) { return `t_${y}_${m}_${d}`; }
+function getData(y, m, d) { const r = localStorage.getItem(storageKey(y, m, d)); return r ? JSON.parse(r) : {}; }
+function setData(y, m, d, data) { localStorage.setItem(storageKey(y, m, d), JSON.stringify(data)); }
+function isToday(y, m, d) { return now.getFullYear() === y && now.getMonth() === m && now.getDate() === d; }
+function isFuture(y, m, d) { const t = new Date(); t.setHours(0,0,0,0); return new Date(y, m, d) > t; }
 
-function getData(y, m, d) {
-  const raw = localStorage.getItem(storageKey(y, m, d));
-  return raw ? JSON.parse(raw) : {};
+function getHabits() {
+  const s = localStorage.getItem('tracker_habits');
+  return s ? JSON.parse(s) : DEFAULT_HABITS;
 }
 
-function setData(y, m, d, data) {
-  localStorage.setItem(storageKey(y, m, d), JSON.stringify(data));
-}
-
-function isWeekend(y, m, d) {
-  const dow = new Date(y, m, d).getDay();
-  return dow === 0 || dow === 6;
-}
-
-function getHabits(y, m, d) {
-  return isWeekend(y, m, d) ? WEEKEND_HABITS : WEEKDAY_HABITS;
-}
+function saveHabits(h) { localStorage.setItem('tracker_habits', JSON.stringify(h)); }
 
 function getScore(y, m, d) {
   const data = getData(y, m, d);
-  const habits = getHabits(y, m, d);
+  const habits = getHabits();
   return habits.filter(h => data[h.key]).length;
 }
 
-function getMode(score) {
-  if (score >= 4) return 'green';
-  if (score >= 2) return 'yellow';
+function getMode(score, total) {
+  if (!total) return 'none';
+  const pct = score / total;
+  if (pct >= 0.67) return 'green';
+  if (pct >= 0.33) return 'yellow';
   if (score >= 1) return 'red';
   return 'none';
 }
 
-function getModeLabel(score) {
-  if (score >= 4) return '🟢 Full';
-  if (score >= 2) return '🟡 Minimum';
+function getModeLabel(score, total) {
+  if (!total) return '—';
+  const pct = score / total;
+  if (pct >= 0.67) return '🟢 Full';
+  if (pct >= 0.33) return '🟡 Minimum';
   if (score >= 1) return '🔴 Emergency';
   return '—';
 }
 
-function isToday(y, m, d) {
-  const now = new Date();
-  return now.getFullYear() === y && now.getMonth() === m && now.getDate() === d;
+// ===== ROADMAP DATA HELPERS =====
+function getRoadmapData(sectionId) {
+  const r = localStorage.getItem(`rm_${sectionId}`);
+  return r ? JSON.parse(r) : {};
 }
 
-function isFuture(y, m, d) {
-  const now = new Date();
-  now.setHours(0,0,0,0);
-  const check = new Date(y, m, d);
-  return check > now;
+function setRoadmapData(sectionId, data) {
+  localStorage.setItem(`rm_${sectionId}`, JSON.stringify(data));
 }
 
-// Seed today's data (May 18, 2026)
-(function seedToday() {
-  const key = storageKey(2026, 4, 18);
-  if (!localStorage.getItem(key)) {
-    setData(2026, 4, 18, { study: true, gym: true, am_skin: true, pm_skin: true });
+function getRoadmapStats() {
+  let total = 0, grandTotal = 0;
+  const sections = {}, sectionTotals = {};
+  ROADMAP.forEach(sec => {
+    let secDone = 0, secTotal = 0;
+    const data = getRoadmapData(sec.id);
+    sec.groups.forEach((g, gi) => {
+      g.items.forEach((_, ii) => {
+        secTotal++;
+        if (data[`${gi}_${ii}`]) secDone++;
+      });
+    });
+    sections[sec.id] = secDone;
+    sectionTotals[sec.id] = secTotal;
+    total += secDone;
+    grandTotal += secTotal;
+  });
+  return { total, grandTotal, sections, sectionTotals };
+}
+
+function getSectionBadge(done, total) {
+  if (!total) return '🥉';
+  const pct = done / total;
+  if (pct >= 1) return '💎';
+  if (pct >= 0.67) return '🥇';
+  if (pct >= 0.33) return '🥈';
+  return '🥉';
+}
+
+function getSectionGradient(done, total) {
+  if (!total) return 'var(--border)';
+  const pct = done / total;
+  if (pct >= 1) return 'linear-gradient(90deg, #818cf8, #34d399)';
+  if (pct >= 0.67) return 'linear-gradient(90deg, #fbbf24, #34d399)';
+  if (pct >= 0.33) return 'linear-gradient(90deg, #818cf8, #a78bfa)';
+  return 'var(--accent)';
+}
+
+function getXpInfo(totalDone) {
+  const xp = totalDone * 10;
+  let lvl = XP_LEVELS[0];
+  for (const l of XP_LEVELS) {
+    if (xp >= l.min) lvl = l;
   }
-})();
+  const pct = lvl.max === Infinity ? 100 : ((xp - lvl.min) / (lvl.max - lvl.min)) * 100;
+  return { xp, level: lvl.level, name: lvl.name, pct: Math.min(100, pct) };
+}
 
-// --- Render ---
-function render() {
+// ===== MOTIVATION =====
+function getDailyMotivation() {
+  const d = new Date();
+  const idx = (d.getFullYear() * 366 + d.getMonth() * 31 + d.getDate()) % MOTIVATIONS.length;
+  return MOTIVATIONS[idx];
+}
+
+function renderMotivation() {
+  const m = getDailyMotivation();
+  const html = `<span class="motivation-icon">${m.icon}</span><span class="motivation-text">${m.text}</span>`;
+  document.getElementById('dailyMotivation').innerHTML = html;
+  document.getElementById('roadmapMotivation').innerHTML = html;
+}
+
+// ===== TOAST =====
+function showToast(message, isXp = false) {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast' + (isXp ? ' xp-toast' : '');
+  t.textContent = message;
+  c.appendChild(t);
+  requestAnimationFrame(() => { requestAnimationFrame(() => t.classList.add('show')); });
+  setTimeout(() => {
+    t.classList.remove('show');
+    setTimeout(() => t.remove(), 300);
+  }, 2000);
+}
+
+function randomPraise(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+// ===== TAB SWITCHING =====
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById(tab === 'daily' ? 'dailyView' : 'roadmapView').classList.add('active');
+  if (tab === 'roadmap') renderRoadmap();
+}
+
+// ===== DAILY TRACKER RENDERING =====
+function renderDaily() {
   renderMonth();
   renderStats();
   renderStreak();
@@ -540,108 +1301,115 @@ function renderMonth() {
 
   const firstDay = new Date(currentYear, currentMonth, 1).getDay();
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-  // Monday-based: convert Sunday(0) to 6, Mon(1) to 0, etc.
   const startOffset = (firstDay === 0) ? 6 : firstDay - 1;
+  const habits = getHabits();
+  const total = habits.length;
 
   let html = '';
-
-  // Empty cells
-  for (let i = 0; i < startOffset; i++) {
-    html += '<div class="day-cell empty"></div>';
-  }
+  for (let i = 0; i < startOffset; i++) html += '<div class="day-cell empty"></div>';
 
   for (let d = 1; d <= daysInMonth; d++) {
     const today = isToday(currentYear, currentMonth, d);
     const future = isFuture(currentYear, currentMonth, d);
     const score = getScore(currentYear, currentMonth, d);
-    const mode = getMode(score);
-    const habits = getHabits(currentYear, currentMonth, d);
+    const mode = getMode(score, total);
     const data = getData(currentYear, currentMonth, d);
 
-    let classes = 'day-cell';
-    if (today) classes += ' today';
-    if (future) classes += ' future';
+    let cls = 'day-cell';
+    if (today) cls += ' today';
+    if (future) cls += ' future';
 
-    let dots = '';
-    habits.forEach(h => {
-      dots += `<div class="dot${data[h.key] ? ' done' : ''}"></div>`;
-    });
-
+    let dots = habits.map(h => `<div class="dot${data[h.key] ? ' done' : ''}"></div>`).join('');
     const modeBar = score > 0 ? `<div class="mode-bar ${mode}"></div>` : '<div class="mode-bar"></div>';
 
-    html += `<div class="${classes}" onclick="openDay(${d})">
+    html += `<div class="${cls}" onclick="openDay(${d})">
       <div class="day-num">${d}</div>
       <div class="day-dots">${dots}</div>
       ${modeBar}
     </div>`;
   }
-
   grid.innerHTML = html;
 }
 
 function renderStats() {
   const bar = document.getElementById('statsBar');
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-  const now = new Date();
-  let greenDays = 0, yellowDays = 0, redDays = 0, totalScore = 0, activeDays = 0;
+  const habits = getHabits();
+  const total = habits.length;
+  let greenDays = 0, yellowDays = 0, redDays = 0, activeDays = 0;
 
   for (let d = 1; d <= daysInMonth; d++) {
     if (isFuture(currentYear, currentMonth, d)) continue;
     const score = getScore(currentYear, currentMonth, d);
     if (score > 0) {
       activeDays++;
-      totalScore += score;
-      const mode = getMode(score);
+      const mode = getMode(score, total);
       if (mode === 'green') greenDays++;
       else if (mode === 'yellow') yellowDays++;
       else if (mode === 'red') redDays++;
     }
   }
 
+  const pct = activeDays > 0 ? Math.round((greenDays / activeDays) * 100) : 0;
+
   bar.innerHTML = `
-    <div class="stat"><div class="stat-value" style="color:var(--green)">${greenDays}</div><div class="stat-label">🟢 Days</div></div>
-    <div class="stat"><div class="stat-value" style="color:var(--yellow)">${yellowDays}</div><div class="stat-label">🟡 Days</div></div>
-    <div class="stat"><div class="stat-value" style="color:var(--red)">${redDays}</div><div class="stat-label">🔴 Days</div></div>
-    <div class="stat"><div class="stat-value">${activeDays}</div><div class="stat-label">Active</div></div>
+    <div class="stat" onclick="flashTip(this,'${greenDays} full-mode days')">
+      <div class="stat-tooltip"></div>
+      <div class="stat-value" style="color:var(--green)">${greenDays}</div><div class="stat-label">🟢 Days</div>
+    </div>
+    <div class="stat" onclick="flashTip(this,'${yellowDays} minimum-mode days')">
+      <div class="stat-tooltip"></div>
+      <div class="stat-value" style="color:var(--yellow)">${yellowDays}</div><div class="stat-label">🟡 Days</div>
+    </div>
+    <div class="stat" onclick="flashTip(this,'${redDays} low-mode days')">
+      <div class="stat-tooltip"></div>
+      <div class="stat-value" style="color:var(--red)">${redDays}</div><div class="stat-label">🔴 Days</div>
+    </div>
+    <div class="stat" onclick="flashTip(this,'${activeDays} active / ${daysInMonth} total days')">
+      <div class="stat-tooltip"></div>
+      <div class="stat-value">${activeDays}</div><div class="stat-label">Active</div>
+    </div>
+    <div class="stat" onclick="flashTip(this,'${pct}% of active days were Full mode')">
+      <div class="stat-tooltip"></div>
+      <div class="stat-value" style="color:var(--accent)">${pct}%</div><div class="stat-label">🎯 Rate</div>
+    </div>
   `;
+}
+
+function flashTip(el, text) {
+  el.querySelector('.stat-tooltip').textContent = text;
+  el.classList.add('show-tip');
+  setTimeout(() => el.classList.remove('show-tip'), 2000);
 }
 
 function renderStreak() {
   const banner = document.getElementById('streakBanner');
   let streak = 0;
-  const now = new Date();
-  let check = new Date(now);
+  const check = new Date();
   check.setHours(0,0,0,0);
 
   while (true) {
     const s = getScore(check.getFullYear(), check.getMonth(), check.getDate());
-    if (s > 0) {
-      streak++;
-      check.setDate(check.getDate() - 1);
-    } else {
-      break;
-    }
+    if (s > 0) { streak++; check.setDate(check.getDate() - 1); }
+    else break;
   }
 
   if (streak > 0) {
-    banner.innerHTML = `🔥 Current streak: <span>${streak} day${streak > 1 ? 's' : ''}</span>`;
+    const fire = streak >= 3 ? 'pulse' : '';
+    banner.innerHTML = `<span class="streak-fire ${fire}">🔥</span> Current streak: <span>${streak} day${streak > 1 ? 's' : ''}</span>`;
   } else {
     banner.innerHTML = `Start your streak today!`;
   }
 }
 
-// --- Modal ---
+// ===== DAY MODAL =====
 function openDay(d) {
   if (isFuture(currentYear, currentMonth, d)) return;
-
   selectedDate = { y: currentYear, m: currentMonth, d };
   const date = new Date(currentYear, currentMonth, d);
-  const dayName = DAYS[date.getDay()];
-  const we = isWeekend(currentYear, currentMonth, d);
+  document.getElementById('modalDate').textContent = `${DAYS_FULL[date.getDay()]}, ${d} ${MONTHS[currentMonth]}`;
 
-  document.getElementById('modalDate').textContent = `${dayName}, ${d} ${MONTHS[currentMonth]}`;
-
-  const habits = getHabits(currentYear, currentMonth, d);
+  const habits = getHabits();
   const data = getData(currentYear, currentMonth, d);
   const list = document.getElementById('habitList');
 
@@ -655,14 +1423,15 @@ function openDay(d) {
   }).join('');
 
   updateModalFooter();
-  document.getElementById('modalOverlay').classList.add('active');
+  document.getElementById('dayModal').classList.add('active');
 }
 
 function toggleHabit(i) {
   const { y, m, d } = selectedDate;
-  const habits = getHabits(y, m, d);
+  const habits = getHabits();
   const data = getData(y, m, d);
   const key = habits[i].key;
+  const wasChecked = !!data[key];
   data[key] = !data[key];
   setData(y, m, d, data);
 
@@ -670,45 +1439,242 @@ function toggleHabit(i) {
   row.classList.toggle('checked');
   row.querySelector('.habit-check').textContent = data[key] ? '✓' : '';
 
+  if (!wasChecked) {
+    const score = habits.filter(h => data[h.key]).length;
+    if (score === habits.length) {
+      showToast(randomPraise(PRAISE_ALL_DONE));
+    } else {
+      showToast(randomPraise(PRAISE_DAILY));
+    }
+  }
+
   updateModalFooter();
-  render();
+  renderDaily();
 }
 
 function updateModalFooter() {
   const { y, m, d } = selectedDate;
+  const habits = getHabits();
   const score = getScore(y, m, d);
-  document.getElementById('modalScore').textContent = `${score}/6`;
+  const total = habits.length;
+  document.getElementById('modalScore').textContent = `${score}/${total}`;
 
   const modeEl = document.getElementById('modalMode');
-  const mode = getMode(score);
-  modeEl.textContent = getModeLabel(score);
+  const mode = getMode(score, total);
+  modeEl.textContent = getModeLabel(score, total);
   modeEl.className = `modal-mode ${mode}`;
 }
 
-document.getElementById('closeModal').onclick = () => {
-  document.getElementById('modalOverlay').classList.remove('active');
+function closeDayModal() { document.getElementById('dayModal').classList.remove('active'); }
+
+document.getElementById('dayModal').onclick = (e) => {
+  if (e.target === e.currentTarget) closeDayModal();
 };
 
-document.getElementById('modalOverlay').onclick = (e) => {
-  if (e.target === e.currentTarget) {
-    document.getElementById('modalOverlay').classList.remove('active');
+// ===== SETTINGS MODAL =====
+function openSettings() {
+  renderSettingsList();
+  document.getElementById('settingsModal').classList.add('active');
+}
+
+function closeSettings() {
+  document.getElementById('settingsModal').classList.remove('active');
+  renderDaily();
+}
+
+function renderSettingsList() {
+  const habits = getHabits();
+  const list = document.getElementById('settingsHabitList');
+  list.innerHTML = habits.map((h, i) => `
+    <div class="settings-habit">
+      <div class="habit-icon">${h.icon}</div>
+      <div class="habit-name">${h.name}</div>
+      <button class="settings-remove" onclick="removeHabit(${i})" title="Remove">✕</button>
+    </div>
+  `).join('');
+}
+
+function removeHabit(i) {
+  const habits = getHabits();
+  if (habits.length <= 1) { showToast("Need at least 1 habit!"); return; }
+  habits.splice(i, 1);
+  saveHabits(habits);
+  renderSettingsList();
+}
+
+function addHabit() {
+  const iconInput = document.getElementById('newHabitIcon');
+  const nameInput = document.getElementById('newHabitName');
+  const icon = iconInput.value.trim() || '🎯';
+  const name = nameInput.value.trim();
+  if (!name) { showToast("Enter a habit name!"); return; }
+
+  const key = name.toLowerCase().replace(/[^a-z0-9]/g, '_').replace(/_+/g, '_').substring(0, 30);
+  const habits = getHabits();
+
+  if (habits.some(h => h.key === key)) { showToast("Habit already exists!"); return; }
+
+  habits.push({ key, icon, name });
+  saveHabits(habits);
+  iconInput.value = '';
+  nameInput.value = '';
+  renderSettingsList();
+  showToast(`Added "${name}" ${icon}`);
+}
+
+document.getElementById('settingsModal').onclick = (e) => {
+  if (e.target === e.currentTarget) closeSettings();
+};
+
+// ===== ROADMAP RENDERING =====
+function renderRoadmap() {
+  const stats = getRoadmapStats();
+  const xp = getXpInfo(stats.total);
+
+  // Progress ring
+  const circumference = 2 * Math.PI * 30; // r=30
+  const pct = stats.grandTotal > 0 ? stats.total / stats.grandTotal : 0;
+  const offset = circumference * (1 - pct);
+  document.getElementById('progressRingFill').style.strokeDashoffset = offset;
+  document.getElementById('progressRingText').textContent = `${Math.round(pct * 100)}%`;
+
+  // XP
+  document.getElementById('xpLevel').textContent = `Level ${xp.level} — ${xp.name}`;
+  document.getElementById('xpValue').textContent = `${xp.xp} XP`;
+  document.getElementById('xpBar').style.width = `${xp.pct}%`;
+
+  // Milestones
+  const mEl = document.getElementById('milestones');
+  mEl.innerHTML = MILESTONE_DEFS.map(m => {
+    const earned = m.check(stats);
+    return `<div class="milestone ${earned ? 'earned' : ''}" onclick="flashMilestoneTip(this,'${m.name}${earned ? ' ✅' : ' — Not yet'}')">
+      ${m.icon}
+      <div class="milestone-tip"></div>
+    </div>`;
+  }).join('');
+
+  // Sections
+  const container = document.getElementById('roadmapSections');
+  container.innerHTML = ROADMAP.map(sec => {
+    const done = stats.sections[sec.id];
+    const total = stats.sectionTotals[sec.id];
+    const pctSec = total > 0 ? Math.round((done / total) * 100) : 0;
+    const badge = getSectionBadge(done, total);
+    const grad = getSectionGradient(done, total);
+    const data = getRoadmapData(sec.id);
+
+    let groupsHtml = '';
+    sec.groups.forEach((g, gi) => {
+      groupsHtml += `<div class="group-title">${g.title}</div>`;
+      g.items.forEach((item, ii) => {
+        const key = `${gi}_${ii}`;
+        const isDone = !!data[key];
+        groupsHtml += `<div class="roadmap-item ${isDone ? 'done' : ''}" onclick="toggleRoadmapItem('${sec.id}',${gi},${ii},this)">
+          <div class="roadmap-check">${isDone ? '✓' : ''}</div>
+          <div class="roadmap-item-text">${item}</div>
+        </div>`;
+      });
+      if (gi < sec.groups.length - 1) groupsHtml += '<div class="section-divider"></div>';
+    });
+
+    return `<div class="roadmap-section" id="section_${sec.id}">
+      <div class="section-header" onclick="toggleSection('${sec.id}')">
+        <div class="section-icon">${sec.icon}</div>
+        <div class="section-info">
+          <div class="section-title">${sec.title}</div>
+          <div class="section-subtitle">${sec.subtitle}</div>
+        </div>
+        <div class="section-badge" onclick="event.stopPropagation();flashSectionBadge(this,'${done}/${total} done')">${badge}</div>
+        <div class="section-progress-wrap">
+          <div class="section-progress-bar"><div class="section-progress-fill" style="width:${pctSec}%;background:${grad}"></div></div>
+          <div class="section-pct">${pctSec}%</div>
+        </div>
+        <div class="section-arrow">▶</div>
+      </div>
+      <div class="section-body">${groupsHtml}</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleSection(sectionId) {
+  document.getElementById(`section_${sectionId}`).classList.toggle('expanded');
+}
+
+function toggleRoadmapItem(sectionId, gi, ii, el) {
+  const data = getRoadmapData(sectionId);
+  const key = `${gi}_${ii}`;
+  const wasDone = !!data[key];
+  data[key] = !data[key];
+  setRoadmapData(sectionId, data);
+
+  el.classList.toggle('done');
+  el.querySelector('.roadmap-check').textContent = data[key] ? '✓' : '';
+
+  if (!wasDone) {
+    showToast(randomPraise(PRAISE_ROADMAP));
+    setTimeout(() => showToast('+10 XP', true), 400);
   }
-};
 
+  // Re-render stats (but preserve section expand state)
+  const expandedSections = [];
+  ROADMAP.forEach(s => {
+    if (document.getElementById(`section_${s.id}`)?.classList.contains('expanded')) {
+      expandedSections.push(s.id);
+    }
+  });
+
+  renderRoadmap();
+
+  // Restore expand state
+  expandedSections.forEach(id => {
+    document.getElementById(`section_${id}`)?.classList.add('expanded');
+  });
+}
+
+function flashSectionBadge(el, text) {
+  // Find the parent section-header, then find the badge within it
+  const tip = el;
+  tip.style.transform = 'scale(1.3)';
+  setTimeout(() => tip.style.transform = '', 200);
+  showToast(text);
+}
+
+function flashRingDetail() {
+  const stats = getRoadmapStats();
+  showToast(`${stats.total} / ${stats.grandTotal} items completed`);
+}
+
+function flashXpDetail() {
+  const stats = getRoadmapStats();
+  const xp = getXpInfo(stats.total);
+  const nextLvl = XP_LEVELS.find(l => l.min > xp.xp);
+  const msg = nextLvl ? `${xp.xp} XP — ${nextLvl.min - xp.xp} XP to Level ${nextLvl.level}` : `${xp.xp} XP — MAX LEVEL! 🏆`;
+  showToast(msg);
+}
+
+function flashMilestoneTip(el, text) {
+  el.querySelector('.milestone-tip').textContent = text;
+  el.classList.add('show-tip');
+  setTimeout(() => el.classList.remove('show-tip'), 2000);
+}
+
+// ===== MONTH NAVIGATION =====
 document.getElementById('prevMonth').onclick = () => {
   currentMonth--;
   if (currentMonth < 0) { currentMonth = 11; currentYear--; }
-  render();
+  renderDaily();
 };
 
 document.getElementById('nextMonth').onclick = () => {
   currentMonth++;
   if (currentMonth > 11) { currentMonth = 0; currentYear++; }
-  render();
+  renderDaily();
 };
 
-// Initial render
-render();
+// ===== INIT =====
+renderMotivation();
+renderDaily();
+
 </script>
 </body>
 </html>
