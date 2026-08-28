@@ -2088,6 +2088,7 @@ async function ghSyncData(isBackground = false) {
         showToast("🔄 Synced from GitHub API!");
         renderDaily();
         if (currentTab === 'roadmap') renderRoadmap();
+        if (typeof renderWadrobe === 'function') renderWadrobe();
       }
     } else if (localTs > remoteTs || (isBackground && localTs >= remoteTs)) {
       const localData = getAllData();
@@ -2125,6 +2126,7 @@ async function autoFetchData() {
           showToast("🔄 Synced from local data.json!");
           renderDaily();
           if (currentTab === 'roadmap') renderRoadmap();
+          if (typeof renderWadrobe === 'function') renderWadrobe();
         }
       }
     }
@@ -2149,6 +2151,16 @@ if (localStorage.getItem('gh_token')) {
 }
 
 // ===== WARDROBE INIT =====
+function renderWadrobe() {
+  const container = document.getElementById('wadrobeView');
+  if (container) {
+    const checkboxes = container.querySelectorAll('.wadrobe-checkbox');
+    checkboxes.forEach(function(checkbox) {
+      checkbox.checked = localStorage.getItem(checkbox.id) === 'true';
+    });
+  }
+}
+
 function initWadrobe() {
   const container = document.getElementById('wadrobeView');
   if (container) {
@@ -2172,9 +2184,11 @@ function initWadrobe() {
       
       checkbox.addEventListener('change', function() {
         localStorage.setItem(this.id, this.checked);
-        if (typeof triggerBgSync === 'function') {
-          localStorage.setItem('sync_timestamp', Date.now());
-          triggerBgSync();
+        updateSyncTimestamp();
+        if (this.checked) {
+          showToast("✅ Marked as Bought!");
+        } else {
+          showToast("🔄 Unmarked as Bought");
         }
       });
     });
