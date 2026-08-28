@@ -1,8 +1,9 @@
 {
-  "timestamp": 1787933808975,
+  "timestamp": 1787933826252,
   "items": {
+    "rm_ai": "{\"0_0\":true,\"0_1\":true,\"0_2\":true,\"0_3\":true,\"0_6\":true}",
+    "w_chk_m1_2": "true",
     "w_chk_m1_1": "true",
-    "t_2026_7_25": "{\"study\":false}",
-    "rm_ai": "{\"0_0\":true,\"0_1\":true,\"0_2\":true,\"0_3\":true,\"0_6\":true}"
+    "t_2026_7_25": "{\"study\":false}"
   }
 }
