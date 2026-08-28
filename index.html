@@ -65,7 +65,7 @@
     border-radius: 14px;
     padding: 4px;
     margin: 12px auto 16px;
-    max-width: 320px;
+    max-width: 420px;
   }
 
   .tab-btn {
@@ -798,6 +798,7 @@
 <div class="tab-bar">
   <button class="tab-btn active" data-tab="daily" onclick="switchTab('daily')">📅 Daily</button>
   <button class="tab-btn" data-tab="roadmap" onclick="switchTab('roadmap')">🗺️ Roadmap</button>
+  <button class="tab-btn" data-tab="wadrobe" onclick="switchTab('wadrobe')">👕 Wadrobe</button>
 </div>
 
 <!-- ===== DAILY TAB ===== -->
@@ -862,6 +863,273 @@
 
   <div id="roadmapSections"></div>
 </div>
+
+<!-- ===== WADROBE TAB ===== -->
+<div id="wadrobeView" class="tab-content">
+<style>
+  /* Wadrobe specific CSS */
+  .wadrobe-section { margin-bottom: 24px; }
+  .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin-top: 12px; }
+  .color-card { background: var(--surface); border: 1px solid var(--border); padding: 12px; border-radius: 8px; display: flex; align-items: center; gap: 12px; }
+  .color-swatch { width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; }
+  
+  .wadrobe-collapsible {
+    background-color: var(--surface2); color: var(--text); cursor: pointer; padding: 16px; width: 100%;
+    border: 1px solid var(--border); text-align: left; outline: none; font-size: 15px; font-weight: 600;
+    border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;
+    transition: background-color 0.2s;
+  }
+  .wadrobe-collapsible:after { content: '+'; color: var(--text-dim); font-weight: bold; font-size: 20px; }
+  .wadrobe-collapsible.active:after { content: "−"; }
+  .wadrobe-collapsible.active, .wadrobe-collapsible:hover { background-color: var(--surface3); }
+  
+  .wadrobe-content {
+    padding: 0 12px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out;
+    background-color: var(--bg); border-left: 2px solid var(--surface2); margin-bottom: 12px; margin-left: 8px;
+  }
+  
+  .table-wrapper { overflow-x: auto; margin: 12px 0; }
+  .wadrobe-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 600px; }
+  .wadrobe-table th, .wadrobe-table td { border: 1px solid var(--border); padding: 10px; text-align: left; }
+  .wadrobe-table th { background-color: var(--surface2); font-weight: 600; }
+  .wadrobe-table tr:nth-child(even) { background-color: var(--surface); }
+  
+  .checkbox-container { text-align: center; }
+  .wadrobe-checkbox { width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent); }
+  
+  .pairing-grid {
+    display: flex; flex-direction: column; gap: 8px; margin: 12px 0; font-family: monospace; font-size: 13px;
+    background: var(--surface); padding: 16px; border-radius: 8px; border: 1px solid var(--border);
+    overflow-x: auto; white-space: pre;
+  }
+</style>
+
+<div class="wadrobe-section">
+  <h2>🎨 YOUR COLOR SYSTEM</h2>
+  <p><strong>Base Colors (80% of wardrobe):</strong></p>
+  <div class="color-grid">
+    <div class="color-card"><div class="color-swatch" style="background: #1e3a8a;"></div> 🔵 Navy blue — The king. Hides sweat.</div>
+    <div class="color-card"><div class="color-swatch" style="background: #374151;"></div> ⚫ Charcoal — Sophisticated. Not black.</div>
+    <div class="color-card"><div class="color-swatch" style="border: 1px solid #ccc; background: #fdfbf7;"></div> ⚪ Off-white / Cream — Looks expensive.</div>
+    <div class="color-card"><div class="color-swatch" style="background: #4b5320;"></div> 🫒 Olive green — Masculine, earthy.</div>
+    <div class="color-card"><div class="color-swatch" style="background: #c3b091;"></div> 🟤 Khaki / Beige — "I look rich without trying".</div>
+  </div>
+  <p style="margin-top: 16px;"><strong>Accent Colors (20% of wardrobe):</strong></p>
+  <div class="color-grid">
+    <div class="color-card"><div class="color-swatch" style="background: #800020;"></div> 🍷 Burgundy / Wine — Date night color.</div>
+    <div class="color-card"><div class="color-swatch" style="background: #228b22;"></div> 🌲 Forest green — Ethnic wear, winter.</div>
+    <div class="color-card"><div class="color-swatch" style="background: #b0e0e6;"></div> 🧊 Powder blue — Summer ethnic, light shirts.</div>
+  </div>
+</div>
+
+<div class="wadrobe-section">
+  <h2>1️⃣ THE DRAWERS</h2>
+  <button class="wadrobe-collapsible">DRAWER 1: HOME (Daily Wear)</button>
+  <div class="wadrobe-content">
+    <div class="table-wrapper">
+      <table class="wadrobe-table">
+        <tr><th>Item</th><th>Color</th><th>Fabric</th><th>Standard → Backup</th><th>Premium</th></tr>
+        <tr><td>🔵👕 Heavy crew-neck tee</td><td>Navy</td><td>100% Supima cotton, 200+ GSM</td><td>March Tee Heavy Crew → Uniqlo U</td><td>Nicobar</td></tr>
+        <tr><td>⚫👕 Heavy crew-neck tee</td><td>Charcoal</td><td>100% Supima cotton, 200+ GSM</td><td>March Tee Heavy Crew → Bewakoof Heavys</td><td>Nicobar</td></tr>
+        <tr><td>⚪👕 Heavy crew-neck tee</td><td>Off-white</td><td>100% Supima cotton, 200+ GSM</td><td>March Tee Classic Crew → Uniqlo U</td><td>Nicobar</td></tr>
+        <tr><td>🫒👕 Heavy crew-neck tee</td><td>Olive</td><td>100% cotton, 180+ GSM</td><td>March Tee → XYXX → Westside</td><td>Nicobar</td></tr>
+        <tr><td>🍷👕 Henley (3-button)</td><td>Burgundy</td><td>Cotton-modal blend</td><td>March Tee Hammo → Indian Terrain</td><td>Selected Homme</td></tr>
+        <tr><td>🔵👕 Henley (3-button)</td><td>Navy</td><td>Cotton-modal blend</td><td>March Tee Hammo → M&S</td><td>Selected Homme</td></tr>
+        <tr><td>🔵🩳 Elastic-waist shorts</td><td>Navy</td><td>Cotton/terry</td><td>Roadster → XYXX</td><td>Uniqlo (linen shorts)</td></tr>
+        <tr><td>⚫🩳 Elastic-waist shorts</td><td>Charcoal</td><td>Cotton/terry</td><td>Roadster → Jockey</td><td>Uniqlo (linen shorts)</td></tr>
+        <tr><td>🫒🩳 Elastic-waist shorts</td><td>Olive</td><td>Cotton</td><td>Roadster → Westside</td><td>Uniqlo (linen shorts)</td></tr>
+        <tr><td>⚫👖 Tapered joggers (winter)</td><td>Charcoal</td><td>French terry / loopknit</td><td>Uniqlo → XYXX</td><td>M&S Autograph</td></tr>
+        <tr><td>🔵👖 Tapered joggers (winter)</td><td>Navy</td><td>French terry / loopknit</td><td>Uniqlo → Roadster</td><td>M&S Autograph</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <button class="wadrobe-collapsible">DRAWER 3: GOING OUT</button>
+  <div class="wadrobe-content">
+    <h4>SUMMER (April – September)</h4>
+    <div class="table-wrapper">
+      <table class="wadrobe-table">
+        <tr><th>Item</th><th>Color</th><th>Fabric</th><th>Standard → Backup</th><th>Premium</th></tr>
+        <tr><td>🔵👔 Polo (piqué cotton)</td><td>Navy</td><td>100% cotton piqué</td><td>M&S → Uniqlo</td><td>Ralph Lauren / Gant</td></tr>
+        <tr><td>⚪👔 Polo (piqué cotton)</td><td>White</td><td>100% cotton piqué</td><td>Uniqlo → March Tee Heavy Polo</td><td>Lacoste / Ralph Lauren</td></tr>
+        <tr><td>🫒👔 Polo (piqué cotton)</td><td>Olive</td><td>100% cotton piqué</td><td>M&S → Indian Terrain</td><td>Gant / Ralph Lauren</td></tr>
+        <tr><td>🍷👔 Polo (piqué cotton)</td><td>Burgundy</td><td>100% cotton piqué</td><td>M&S → Uniqlo</td><td>Ralph Lauren / Gant</td></tr>
+        <tr><td>⚪👔 Linen shirt (half-sleeve)</td><td>White</td><td>100% linen or cotton-linen</td><td>Uniqlo → M&S</td><td>Massimo Dutti / Nicobar</td></tr>
+        <tr><td>🧊👔 Linen shirt (half-sleeve)</td><td>Light blue</td><td>100% linen or cotton-linen</td><td>Uniqlo → H&M</td><td>Massimo Dutti / Nicobar</td></tr>
+        <tr><td>🟤👖 Chinos</td><td>Khaki / Beige</td><td>Stretch cotton twill</td><td>M&S → Uniqlo EZY</td><td>Massimo Dutti / Ralph Lauren</td></tr>
+        <tr><td>🔵👖 Chinos</td><td>Navy</td><td>Stretch cotton twill</td><td>M&S → Indian Terrain</td><td>Massimo Dutti / Ralph Lauren</td></tr>
+        <tr><td>🫒👖 Chinos</td><td>Olive</td><td>Stretch cotton twill</td><td>Uniqlo → Indian Terrain</td><td>Massimo Dutti</td></tr>
+        <tr><td>⚫👖 Chinos</td><td>Charcoal</td><td>Stretch cotton twill</td><td>M&S → Uniqlo</td><td>Massimo Dutti</td></tr>
+        <tr><td>🔵👖 Dark denim</td><td>Indigo</td><td>Stretch denim</td><td>Levi's 511 Slim-Tapered</td><td>AllSaints / G-Star RAW</td></tr>
+        <tr><td>🟤🩳 Shorts (going out)</td><td>Beige</td><td>Cotton or linen, 7" inseam</td><td>Uniqlo → H&M</td><td>Massimo Dutti / Nicobar</td></tr>
+      </table>
+    </div>
+    
+    <h4>WINTER ADDITIONS (October – March)</h4>
+    <div class="table-wrapper">
+      <table class="wadrobe-table">
+        <tr><th>Item</th><th>Color</th><th>Fabric</th><th>Standard → Backup</th><th>Premium</th></tr>
+        <tr><td>⚪👔 Oxford shirt (full-sleeve)</td><td>White</td><td>100% cotton oxford</td><td>M&S → Uniqlo</td><td>Ralph Lauren / Brooks Brothers</td></tr>
+        <tr><td>🧊👔 Oxford shirt (full-sleeve)</td><td>Light blue</td><td>100% cotton oxford</td><td>M&S</td><td>Ralph Lauren / Brooks Brothers</td></tr>
+        <tr><td>🔵🧥 V-neck wool sweater</td><td>Navy</td><td>Merino wool or wool-blend</td><td>Uniqlo → M&S</td><td>Gant / Ralph Lauren</td></tr>
+        <tr><td>⚫🧥 V-neck wool sweater</td><td>Charcoal</td><td>Merino wool or wool-blend</td><td>Uniqlo → M&S</td><td>Gant / Ralph Lauren</td></tr>
+        <tr><td>🟤🧥 Quarter-zip pullover</td><td>Camel / Beige</td><td>Cotton knit or merino</td><td>Uniqlo → M&S</td><td>Ralph Lauren / Gant</td></tr>
+        <tr><td>🔵🧥 Lightweight jacket</td><td>Navy</td><td>Cotton or wool-blend</td><td>Zara → H&M (on sale)</td><td>Massimo Dutti / Mango Man</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="wadrobe-section">
+  <h2>2️⃣ MONTH-BY-MONTH BUYING PLAN</h2>
+  
+  <button class="wadrobe-collapsible">Month 1 — August 2026: Home Foundation</button>
+  <div class="wadrobe-content">
+    <div class="table-wrapper">
+      <table class="wadrobe-table">
+        <tr><th>Item</th><th>Color</th><th>Fabric</th><th>Standard → Backup</th><th>Premium</th><th>Bought</th></tr>
+        <tr><td>🔵👕 Heavy crew-neck tee</td><td>Navy</td><td>100% Supima cotton, 200+ GSM</td><td>March Tee Heavy Crew → Uniqlo U</td><td>Nicobar</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m1_1"></td></tr>
+        <tr><td>⚫👕 Heavy crew-neck tee</td><td>Charcoal</td><td>100% Supima cotton, 200+ GSM</td><td>March Tee Heavy Crew → Bewakoof Heavys</td><td>Nicobar</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m1_2"></td></tr>
+        <tr><td>⚪👕 Heavy crew-neck tee</td><td>Off-white</td><td>100% Supima cotton, 200+ GSM</td><td>March Tee Classic Crew → Uniqlo U</td><td>Nicobar</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m1_3"></td></tr>
+        <tr><td>🔵🩳 + ⚫🩳 Elastic shorts × 2</td><td>Navy + Charcoal</td><td>Cotton/terry</td><td>Roadster → XYXX / Jockey</td><td>Uniqlo (linen shorts)</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m1_4"></td></tr>
+        <tr><td>🔵👖 + ⚫👖 Sleep pajama pants × 2</td><td>Navy + Charcoal</td><td>100% cotton / Cotton-modal</td><td>Jockey</td><td>M&S Autograph sleepwear</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m1_5"></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <button class="wadrobe-collapsible">Month 2 — September 2026: Gym + Home Finish</button>
+  <div class="wadrobe-content">
+    <div class="table-wrapper">
+      <table class="wadrobe-table">
+        <tr><th>Item</th><th>Color</th><th>Fabric</th><th>Standard → Backup</th><th>Premium</th><th>Bought</th></tr>
+        <tr><td>⚫👕 + 🔵👕 + ⚫👕 Dry-fit gym tee × 3</td><td>Black, Navy, Dark grey</td><td>Polyester-spandex</td><td>Decathlon Domyos</td><td>Under Armour / Nike</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m2_1"></td></tr>
+        <tr><td>⚫🩳 + 🔵🩳 + ⚫🩳 Gym shorts × 3</td><td>Black, Navy, Dark grey</td><td>Quick-dry polyester</td><td>Decathlon</td><td>Nike Flex Stride</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m2_2"></td></tr>
+        <tr><td>🫒👕 Home tee</td><td>Olive</td><td>100% cotton, 180+ GSM</td><td>March Tee → XYXX → Westside</td><td>Nicobar</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m2_3"></td></tr>
+        <tr><td>🍷👕 Henley</td><td>Burgundy</td><td>Cotton-modal blend</td><td>March Tee Hammo → Indian Terrain</td><td>Selected Homme</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m2_4"></td></tr>
+        <tr><td>🫒🩳 Home shorts</td><td>Olive</td><td>Cotton</td><td>Roadster → Westside</td><td>Uniqlo (linen shorts)</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m2_5"></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <button class="wadrobe-collapsible">Month 3 — October 2026: Going Out Foundation</button>
+  <div class="wadrobe-content">
+    <div class="table-wrapper">
+      <table class="wadrobe-table">
+        <tr><th>Item</th><th>Color</th><th>Fabric</th><th>Standard → Backup</th><th>Premium</th><th>Bought</th></tr>
+        <tr><td>🔵👔 Polo</td><td>Navy</td><td>100% cotton piqué</td><td>M&S → Uniqlo</td><td>Ralph Lauren / Gant</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m3_1"></td></tr>
+        <tr><td>⚪👔 Polo</td><td>White</td><td>100% cotton piqué</td><td>Uniqlo → March Tee Heavy Polo</td><td>Lacoste / Ralph Lauren</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m3_2"></td></tr>
+        <tr><td>🟤👖 Chinos</td><td>Khaki / Beige</td><td>Stretch cotton twill</td><td>M&S → Uniqlo EZY</td><td>Massimo Dutti / Ralph Lauren</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m3_3"></td></tr>
+        <tr><td>🔵👖 Chinos</td><td>Navy</td><td>Stretch cotton twill</td><td>M&S → Indian Terrain</td><td>Massimo Dutti / Ralph Lauren</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m3_4"></td></tr>
+        <tr><td>🟤 Brown leather belt</td><td>Brown</td><td>Leather</td><td>Hidesign → local</td><td>Nappa Dori / Tommy Hilfiger</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m3_5"></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <button class="wadrobe-collapsible">Month 4 — November 2026: Winter Prep + Denim</button>
+  <div class="wadrobe-content">
+    <div class="table-wrapper">
+      <table class="wadrobe-table">
+        <tr><th>Item</th><th>Color</th><th>Fabric</th><th>Standard → Backup</th><th>Premium</th><th>Bought</th></tr>
+        <tr><td>🔵👖 Dark denim</td><td>Indigo</td><td>Stretch denim</td><td>Levi's 511 Slim-Tapered</td><td>AllSaints / G-Star RAW</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m4_1"></td></tr>
+        <tr><td>🔵🧥 V-neck merino sweater</td><td>Navy</td><td>Merino wool or wool-blend</td><td>Uniqlo → M&S</td><td>Gant / Ralph Lauren</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m4_2"></td></tr>
+        <tr><td>🫒👖 Chinos</td><td>Olive</td><td>Stretch cotton twill</td><td>Uniqlo → Indian Terrain</td><td>Massimo Dutti</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m4_3"></td></tr>
+        <tr><td>🔵👕 Henley</td><td>Navy</td><td>Cotton-modal blend</td><td>March Tee Hammo → M&S</td><td>Selected Homme</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m4_4"></td></tr>
+        <tr><td>⚫👖 Gym training jogger</td><td>Black</td><td>4-way stretch</td><td>Athflex → Fuaark</td><td>Under Armour Unstoppable</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m4_5"></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <button class="wadrobe-collapsible">Month 5 — December 2026: Winter Core + Sneakers</button>
+  <div class="wadrobe-content">
+    <div class="table-wrapper">
+      <table class="wadrobe-table">
+        <tr><th>Item</th><th>Color</th><th>Fabric</th><th>Standard → Backup</th><th>Premium</th><th>Bought</th></tr>
+        <tr><td>⚪👟 White minimalist sneakers</td><td>White</td><td>Leather / Synthetic</td><td>Reebok Club C → Zara</td><td>Onitsuka Tiger Mexico 66 / Veja</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m5_1"></td></tr>
+        <tr><td>⚫🧥 V-neck merino sweater</td><td>Charcoal</td><td>Merino wool or wool-blend</td><td>Uniqlo → M&S</td><td>Gant / Ralph Lauren</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m5_2"></td></tr>
+        <tr><td>🟤🧥 Quarter-zip pullover</td><td>Camel / Beige</td><td>Cotton knit or merino</td><td>Uniqlo → M&S</td><td>Ralph Lauren / Gant</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m5_3"></td></tr>
+        <tr><td>⚫👖 Home jogger</td><td>Charcoal</td><td>French terry / loopknit</td><td>Uniqlo → XYXX</td><td>M&S Autograph</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m5_4"></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <button class="wadrobe-collapsible">Month 6 — January 2027: Loafers + Shirts + Watch</button>
+  <div class="wadrobe-content">
+    <div class="table-wrapper">
+      <table class="wadrobe-table">
+        <tr><th>Item</th><th>Color</th><th>Fabric</th><th>Standard → Backup</th><th>Premium</th><th>Bought</th></tr>
+        <tr><td>🟤👞 Tan leather loafers</td><td>Tan / Cognac</td><td>Leather</td><td>Hush Puppies → Clarks</td><td>Cole Haan / Aldo Premium</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m6_1"></td></tr>
+        <tr><td>⚪👔 Oxford shirt</td><td>White</td><td>100% cotton oxford</td><td>M&S → Uniqlo</td><td>Ralph Lauren / Brooks Brothers</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m6_2"></td></tr>
+        <tr><td>⚫👖 Chinos</td><td>Charcoal</td><td>Stretch cotton twill</td><td>M&S → Uniqlo</td><td>Massimo Dutti</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m6_3"></td></tr>
+        <tr><td>⌚ Watch</td><td>Silver, white dial</td><td>Steel / Leather strap</td><td>Casio Vintage → Timex</td><td>Tissot PRX / Seiko Presage</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m6_4"></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <button class="wadrobe-collapsible">Month 7 — February 2027: Polish + Summer Prep</button>
+  <div class="wadrobe-content">
+    <div class="table-wrapper">
+      <table class="wadrobe-table">
+        <tr><th>Item</th><th>Color</th><th>Fabric</th><th>Standard → Backup</th><th>Premium</th><th>Bought</th></tr>
+        <tr><td>🫒👔 Polo</td><td>Olive</td><td>100% cotton piqué</td><td>M&S → Indian Terrain</td><td>Gant / Ralph Lauren</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m7_1"></td></tr>
+        <tr><td>🍷👔 Polo</td><td>Burgundy</td><td>100% cotton piqué</td><td>M&S → Uniqlo</td><td>Ralph Lauren / Gant</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m7_2"></td></tr>
+        <tr><td>🧊👔 Oxford shirt</td><td>Light blue</td><td>100% cotton oxford</td><td>M&S</td><td>Ralph Lauren / Brooks Brothers</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m7_3"></td></tr>
+        <tr><td>🔵🧥 Lightweight jacket</td><td>Navy</td><td>Cotton or wool-blend</td><td>Zara → H&M (on sale)</td><td>Massimo Dutti / Mango Man</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m7_4"></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <button class="wadrobe-collapsible">Month 8 — March 2027: Final Pieces</button>
+  <div class="wadrobe-content">
+    <div class="table-wrapper">
+      <table class="wadrobe-table">
+        <tr><th>Item</th><th>Color</th><th>Fabric</th><th>Standard → Backup</th><th>Premium</th><th>Bought</th></tr>
+        <tr><td>⚪👔 Linen shirt (half-sleeve)</td><td>White</td><td>100% linen or cotton-linen</td><td>Uniqlo → M&S</td><td>Massimo Dutti / Nicobar</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m8_1"></td></tr>
+        <tr><td>🧊👔 Linen shirt (half-sleeve)</td><td>Light blue</td><td>100% linen or cotton-linen</td><td>Uniqlo → H&M</td><td>Massimo Dutti / Nicobar</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m8_2"></td></tr>
+        <tr><td>🟤🩳 Going-out shorts</td><td>Beige</td><td>Cotton or linen, 7" inseam</td><td>Uniqlo → H&M</td><td>Massimo Dutti / Nicobar</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m8_3"></td></tr>
+        <tr><td>🔵👖 Home jogger</td><td>Navy</td><td>French terry / loopknit</td><td>Uniqlo → Roadster</td><td>M&S Autograph</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m8_4"></td></tr>
+        <tr><td>🕶️ Sunglasses</td><td>Aviator</td><td>Metal frame</td><td>Lenskart → John Jacobs</td><td>Ray-Ban Aviator</td><td class="checkbox-container"><input type="checkbox" class="wadrobe-checkbox" id="w_chk_m8_5"></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="wadrobe-section">
+  <h2>3️⃣ VISUAL PAIRING GUIDE</h2>
+  <button class="wadrobe-collapsible">SUMMER PAIRINGS (April – September)</button>
+  <div class="wadrobe-content">
+    <div class="pairing-grid">
+ TOP                    +  BOTTOM              +  SHOES              =  OCCASION
+──────────────────────────────────────────────────────────────────────────────────────
+ 🔵👔 Navy polo         +  🟤👖 Khaki chino    +  🟤👞 Tan loafer     =  Office / Outings
+ ⚪👔 White polo        +  🫒👖 Olive chino    +  ⚪👟 Wht sneaker    =  Café / Mall
+ 🍷👔 Burg polo         +  ⚫👖 Charc chino    +  🟤👞 Tan loafer     =  Date night
+ 🫒👔 Olive polo        +  🔵👖 Navy chino     +  ⚪👟 Wht sneaker    =  Friends hangout
+ ⚪👔 White linen       +  🟤👖 Khaki chino    +  🟤👞 Tan loafer     =  Brunch / Vacation
+ 🧊👔 Blue linen        +  🟤🩳 Beige short    +  ⚪👟 Wht sneaker    =  Weekend casual
+ ⚫👕 Charc tee         +  🔵👖 Indigo denim   +  ⚪👟 Wht sneaker    =  Evening out
+ ⚪👕 Cream tee         +  🫒👖 Olive chino    +  🟤👞 Tan loafer     =  Smart casual
+ 🔵👕 Navy henley       +  🟤👖 Khaki chino    +  🟤👞 Tan loafer     =  Video call / WFH
+ 🍷👕 Burg henley       +  🔵👖 Navy chino     +  ⚪👟 Wht sneaker    =  Casual date
+    </div>
+  </div>
+  
+  <button class="wadrobe-collapsible">WINTER PAIRINGS (October – March)</button>
+  <div class="wadrobe-content">
+    <div class="pairing-grid">
+ LAYER 1 (base)         +  LAYER 2 (over)           +  BOTTOM              +  SHOES
+──────────────────────────────────────────────────────────────────────────────────────────
+ ⚪👕 Cream tee         +  🔵🧥 Navy sweater        +  🟤👖 Khaki chino    +  🟤🥾 Chelsea
+ ⚫👕 Charc tee         +  🟤🧥 Camel zip          +  🔵👖 Indigo denim   +  ⚪👟 Wht sneaker
+ ⚪👔 White OCBD        +  🔵🧥 Navy sweater        +  ⚫👖 Charc chino    +  🟤👞 Tan loafer
+ 🔵👕 Navy tee          +  ⚫🧥 Charc sweater       +  🟤👖 Khaki chino    +  🟤🥾 Chelsea
+ 🧊👔 Blue OCBD         +  🟤🧥 Camel zip          +  🔵👖 Navy chino     +  🟤👞 Tan loafer
+ ⚫👕 Charc tee         +  🔵🧥 Navy jacket         +  🔵👖 Indigo denim   +  🟤🥾 Chelsea
+    </div>
+  </div>
+</div>
+</div>
+
+
 
 <!-- ===== DAY DETAIL MODAL ===== -->
 <div class="modal-overlay" id="dayModal">
@@ -1307,7 +1575,7 @@ function switchTab(tab) {
   currentTab = tab;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  document.getElementById(tab === 'daily' ? 'dailyView' : 'roadmapView').classList.add('active');
+  document.getElementById(tab + 'View').classList.add('active');
   if (tab === 'roadmap') renderRoadmap();
 }
 
@@ -1703,7 +1971,7 @@ function getAllData() {
   const data = { timestamp: Date.now(), items: {} };
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
-    if (key.startsWith('t_') || key.startsWith('rm_') || key === 'tracker_habits') {
+    if (key.startsWith('t_') || key.startsWith('rm_') || key.startsWith('w_chk_') || key === 'tracker_habits') {
       data.items[key] = localStorage.getItem(key);
     }
   }
@@ -1866,13 +2134,53 @@ async function autoFetchData() {
 }
 
 // ===== INIT =====
+const urlParams = new URLSearchParams(window.location.search);
+const initialTab = urlParams.get('tab');
+
 renderMotivation();
 renderDaily();
+if (initialTab === 'roadmap') {
+  switchTab('roadmap');
+}
 if (localStorage.getItem('gh_token')) {
   ghSyncData();
 } else {
   autoFetchData();
 }
+
+// ===== WARDROBE INIT =====
+function initWadrobe() {
+  const container = document.getElementById('wadrobeView');
+  if (container) {
+    const coll = container.getElementsByClassName("wadrobe-collapsible");
+    for (let i = 0; i < coll.length; i++) {
+      coll[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        let content = this.nextElementSibling;
+        if (content.style.maxHeight){
+          content.style.maxHeight = null;
+        } else {
+          content.style.maxHeight = content.scrollHeight + "px";
+        } 
+      });
+    }
+
+    const checkboxes = container.querySelectorAll('.wadrobe-checkbox');
+    checkboxes.forEach(function(checkbox) {
+      const checked = localStorage.getItem(checkbox.id) === 'true';
+      checkbox.checked = checked;
+      
+      checkbox.addEventListener('change', function() {
+        localStorage.setItem(this.id, this.checked);
+        if (typeof triggerBgSync === 'function') {
+          localStorage.setItem('sync_timestamp', Date.now());
+          triggerBgSync();
+        }
+      });
+    });
+  }
+}
+initWadrobe();
 
 </script>
 </body>
