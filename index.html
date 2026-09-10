@@ -1152,6 +1152,7 @@
     <button class="tab-btn active" data-tab="daily" onclick="switchTab('daily')">📅 Daily</button>
     <button class="tab-btn" data-tab="roadmap" onclick="switchTab('roadmap')">🗺️ Roadmap</button>
     <button class="tab-btn" data-tab="fitness" onclick="switchTab('fitness')">💪 Fitness</button>
+    <button class="tab-btn" data-tab="diet" onclick="switchTab('diet')">🥗 Diet</button>
     <button class="tab-btn" data-tab="wadrobe" onclick="switchTab('wadrobe')">👕 Wadrobe</button>
   </div>
 
@@ -1312,67 +1313,75 @@
             </tr>
             <tr>
               <td>4:45 AM</td>
-              <td>Wake → warm water + lemon + salt</td>
+              <td>🍋 Wake → warm water + pink salt + ½ lemon</td>
             </tr>
             <tr>
               <td>5:00 AM</td>
-              <td>Leave for gym</td>
+              <td>🏃 Leave for gym</td>
             </tr>
             <tr>
               <td>5:30 AM</td>
-              <td>Gym: warm-up → weights/zone2 cardio → cooldown</td>
+              <td>🏋️ Gym: warm-up → weights/zone2 cardio → cooldown</td>
             </tr>
             <tr>
               <td>7:15 AM</td>
-              <td>Home → protein shake → dog walk</td>
+              <td>🏠 Home → dog walk (morning sun, no sunglasses)</td>
             </tr>
             <tr>
               <td>7:45 AM</td>
-              <td>Skincare AM</td>
+              <td>🧴 Skincare AM</td>
             </tr>
             <tr>
               <td>8:00 AM</td>
-              <td>STUDY (deep work, phone in drawer)</td>
+              <td>🥤 POST-GYM SHAKE: 3g creatine + 1 scoop whey + 5 tbsp oats + 2 tbsp curd + 1 tsp honey</td>
             </tr>
             <tr>
-              <td>10:30 AM</td>
-              <td>Breakfast (Meal 1 — protein first)</td>
+              <td>8:15 AM</td>
+              <td>📖 STUDY (deep work, phone in drawer)</td>
             </tr>
             <tr>
               <td>11:00 AM</td>
-              <td>Start work</td>
+              <td>🍳 MEAL 1: Eggs/chillas + vegetables + peanut butter (see Diet tab)</td>
             </tr>
             <tr>
-              <td>12:30 PM</td>
-              <td>Black coffee (last caffeine of the day)</td>
+              <td>11:30 AM</td>
+              <td>💻 Start work</td>
             </tr>
             <tr>
-              <td>2:30 PM</td>
-              <td>Lunch (Meal 2)</td>
+              <td>1:00 PM</td>
+              <td>☕ Black coffee — last caffeine of the day (no sugar)</td>
+            </tr>
+            <tr>
+              <td>3:45 PM</td>
+              <td>🍎 ACV shot: 1 tbsp apple cider vinegar in water (use straw)</td>
+            </tr>
+            <tr>
+              <td>4:00 PM</td>
+              <td>🍛 MEAL 2: 2 roti + daal + protein (chicken/fish/mutton/legume) + veg + 1 tsp ghee (see Diet tab)</td>
             </tr>
             <tr>
               <td>6:00 PM</td>
-              <td>Work done → close laptop</td>
+              <td>💻 Work done → close laptop</td>
             </tr>
             <tr>
               <td>6:15 PM</td>
-              <td>Dinner (Meal 3 — light)</td>
+              <td>🍇 Fruit (low-GI) + 4-5 walnuts + 1 tbsp seed mix</td>
             </tr>
             <tr>
               <td>6:40 PM</td>
-              <td>Dog walk (15 min — glucose clearing)</td>
+              <td>🐕 Dog walk (15 min — glucose clearing, non-negotiable)</td>
             </tr>
             <tr>
               <td>7:00 PM</td>
-              <td>Free time</td>
+              <td>🎮 Free time</td>
             </tr>
             <tr>
               <td>8:30 PM</td>
-              <td>Screens off → Go to bed</td>
+              <td>📵 Screens off → wind down</td>
             </tr>
             <tr>
               <td>9:00 PM</td>
-              <td>Sleep</td>
+              <td>😴 Sleep</td>
             </tr>
           </table>
         </div>
@@ -1688,6 +1697,444 @@
 
     </div>
   </div>
+  <!-- ===== DIET TAB ===== -->
+  <div id="dietView" class="tab-content">
+    <style>
+      .diet-section {
+        margin-bottom: 24px;
+      }
+
+      .diet-collapsible {
+        background-color: var(--surface2);
+        color: var(--text);
+        cursor: pointer;
+        padding: 16px;
+        width: 100%;
+        border: 1px solid var(--border);
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 10px;
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background-color 0.2s;
+      }
+
+      .diet-collapsible:after {
+        content: '+';
+        color: var(--text-dim);
+        font-weight: bold;
+        font-size: 20px;
+      }
+
+      .diet-collapsible.active:after {
+        content: "−";
+      }
+
+      .diet-collapsible.active,
+      .diet-collapsible:hover {
+        background-color: var(--surface3);
+      }
+
+      .diet-content {
+        padding: 0 12px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        background-color: var(--bg);
+        border-left: 2px solid var(--surface2);
+        margin-bottom: 12px;
+        margin-left: 8px;
+      }
+
+      .diet-badge {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        margin-top: 8px;
+      }
+
+      .diet-badge.green {
+        background: var(--green-bg);
+        color: var(--green);
+      }
+
+      .diet-badge.orange {
+        background: rgba(251, 146, 60, 0.12);
+        color: var(--orange);
+      }
+
+      .diet-badge.blue {
+        background: rgba(96, 165, 250, 0.12);
+        color: var(--blue);
+      }
+
+      .diet-meal-block {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin: 8px 0;
+      }
+
+      .diet-meal-time {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+      }
+
+      .diet-meal-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 6px;
+      }
+
+      .diet-meal-items {
+        font-size: 13px;
+        color: var(--text-dim);
+        line-height: 1.7;
+      }
+
+      .diet-meal-items li {
+        margin-left: 14px;
+      }
+
+      .diet-macro-bar {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+      }
+
+      .diet-macro-pill {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 3px 10px;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-dim);
+      }
+
+      .diet-macro-pill span {
+        color: var(--text);
+      }
+
+      .diet-rotation-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        margin-top: 8px;
+      }
+
+      .diet-rotation-item {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+
+      .diet-rotation-item .day {
+        font-weight: 700;
+        color: var(--accent);
+        font-size: 11px;
+      }
+
+      .diet-rotation-item .meal {
+        color: var(--text-dim);
+        margin-top: 2px;
+      }
+
+      .diet-rule-box {
+        background: rgba(52, 211, 153, 0.06);
+        border: 1px solid rgba(52, 211, 153, 0.2);
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin: 8px 0;
+        font-size: 13px;
+        line-height: 1.7;
+        color: var(--text-dim);
+      }
+
+      .diet-rule-box strong {
+        color: var(--green);
+      }
+    </style>
+
+    <div class="diet-section">
+      <h2>🥗 DAILY DIET</h2>
+      <br>
+
+      <!-- NON-VEG DAY -->
+      <button class="diet-collapsible">🐔 Non-Veg Day — Full Meal Plan</button>
+      <div class="diet-content">
+
+        <div class="diet-meal-block">
+          <div class="diet-meal-time">8:00 AM</div>
+          <div class="diet-meal-title">🥤 Post-Gym Shake</div>
+          <ul class="diet-meal-items">
+            <li>3g Creatine Monohydrate</li>
+            <li>1 scoop Whey Protein (~25g protein)</li>
+            <li>5 tbsp Rolled Oats</li>
+            <li>2 tbsp Curd (normal)</li>
+            <li>1 tsp Honey (raw)</li>
+          </ul>
+          <div class="diet-macro-bar">
+            <div class="diet-macro-pill">P: <span>28g</span></div>
+            <div class="diet-macro-pill">C: <span>32g</span></div>
+            <div class="diet-macro-pill">F: <span>5g</span></div>
+            <div class="diet-macro-pill">~<span>285 kcal</span></div>
+          </div>
+        </div>
+
+        <div class="diet-meal-block">
+          <div class="diet-meal-time">11:00 AM — MEAL 1</div>
+          <div class="diet-meal-title">🍳 Eggs + Bread + PB + Vegetables</div>
+          <ul class="diet-meal-items">
+            <li><strong>4 whole eggs</strong> (boiled / omelette / bhurji)</li>
+            <li><strong>2 brown bread</strong> slices</li>
+            <li><strong>1 tbsp peanut butter</strong></li>
+            <li><strong>Vegetables</strong> (depends on egg style):<br>
+              — Omelette/Bhurji: onion + tomato + capsicum / mushrooms / beans (cooked in)<br>
+              — Boiled eggs: cucumber + carrot + beetroot salad (lemon + salt)</li>
+          </ul>
+          <div class="diet-macro-bar">
+            <div class="diet-macro-pill">P: <span>33g</span></div>
+            <div class="diet-macro-pill">C: <span>30g</span></div>
+            <div class="diet-macro-pill">F: <span>30g</span></div>
+            <div class="diet-macro-pill">~<span>520 kcal</span></div>
+          </div>
+        </div>
+
+        <div class="diet-meal-block">
+          <div class="diet-meal-time">1:00 PM</div>
+          <div class="diet-meal-title">☕ Black Coffee</div>
+          <ul class="diet-meal-items">
+            <li>No sugar. Last caffeine of the day.</li>
+            <li>Proven to reduce fatty liver risk by 40%.</li>
+          </ul>
+        </div>
+
+        <div class="diet-meal-block">
+          <div class="diet-meal-time">3:45 PM</div>
+          <div class="diet-meal-title">🍎 ACV Shot</div>
+          <ul class="diet-meal-items">
+            <li>1 tbsp Apple Cider Vinegar in 1 glass water</li>
+            <li>Use a straw (protects enamel)</li>
+            <li>Reduces post-meal glucose spike 4-6%</li>
+          </ul>
+        </div>
+
+        <div class="diet-meal-block">
+          <div class="diet-meal-time">4:00 PM — MEAL 2 (Last Meal)</div>
+          <div class="diet-meal-title">🍛 Roti + Daal + Protein + Vegetable</div>
+          <ul class="diet-meal-items">
+            <li><strong>2 multigrain roti</strong> + 1 tsp ghee</li>
+            <li><strong>1 katori daal</strong> (toor / moong / masoor / chana — any)</li>
+            <li><strong>Protein rotation:</strong>
+              <div class="diet-rotation-grid" style="margin-top:6px;">
+                <div class="diet-rotation-item">
+                  <div class="day">MON</div>
+                  <div class="meal">🐔 Chicken 200g</div>
+                </div>
+                <div class="diet-rotation-item">
+                  <div class="day">WED</div>
+                  <div class="meal">🐟 Fish 200g</div>
+                </div>
+                <div class="diet-rotation-item">
+                  <div class="day">FRI</div>
+                  <div class="meal">🐔 Chicken 200g</div>
+                </div>
+                <div class="diet-rotation-item">
+                  <div class="day">SUN</div>
+                  <div class="meal">🐐 Mutton 150g</div>
+                </div>
+              </div>
+            </li>
+            <li><strong>1 katori green vegetable</strong> (lauki / palak / bhindi / gobhi / tori)</li>
+          </ul>
+          <div class="diet-macro-bar">
+            <div class="diet-macro-pill">P: <span>54g</span></div>
+            <div class="diet-macro-pill">C: <span>52g</span></div>
+            <div class="diet-macro-pill">F: <span>16g</span></div>
+            <div class="diet-macro-pill">~<span>570 kcal</span></div>
+          </div>
+        </div>
+
+        <div class="diet-meal-block">
+          <div class="diet-meal-time">6:15 PM</div>
+          <div class="diet-meal-title">🍇 Fruit + Walnuts + Seed Mix</div>
+          <ul class="diet-meal-items">
+            <li>1 low-GI fruit: apple / guava / pomegranate / pear</li>
+            <li>4-5 walnut halves</li>
+            <li>1 tbsp seed mix (flax + pumpkin + sunflower + chia + sesame)</li>
+          </ul>
+          <div class="diet-macro-bar">
+            <div class="diet-macro-pill">P: <span>5g</span></div>
+            <div class="diet-macro-pill">C: <span>28g</span></div>
+            <div class="diet-macro-pill">F: <span>12g</span></div>
+            <div class="diet-macro-pill">~<span>230 kcal</span></div>
+          </div>
+        </div>
+
+        <div class="diet-rule-box">
+          <strong>Non-Veg Day Total:</strong> ~120g Protein | ~142g Carbs | ~63g Fat | ~24g Fiber | <strong>~1605
+            kcal</strong>
+        </div>
+      </div>
+
+      <!-- VEG DAY -->
+      <button class="diet-collapsible">🥬 Veg Day — Full Meal Plan</button>
+      <div class="diet-content">
+
+        <div class="diet-meal-block">
+          <div class="diet-meal-time">8:00 AM</div>
+          <div class="diet-meal-title">🥤 Post-Gym Shake</div>
+          <ul class="diet-meal-items">
+            <li>3g Creatine Monohydrate</li>
+            <li>1 scoop Whey Protein (~25g protein)</li>
+            <li>5 tbsp Rolled Oats</li>
+            <li>2 tbsp Curd (normal)</li>
+            <li>1 tsp Honey (raw)</li>
+          </ul>
+          <div class="diet-macro-bar">
+            <div class="diet-macro-pill">P: <span>28g</span></div>
+            <div class="diet-macro-pill">C: <span>32g</span></div>
+            <div class="diet-macro-pill">F: <span>5g</span></div>
+            <div class="diet-macro-pill">~<span>285 kcal</span></div>
+          </div>
+        </div>
+
+        <div class="diet-meal-block">
+          <div class="diet-meal-time">11:00 AM — MEAL 1</div>
+          <div class="diet-meal-title">🧆 Chillas + Paneer + PB + Salad</div>
+          <ul class="diet-meal-items">
+            <li><strong>3 moong chillas OR besan chillas</strong></li>
+            <li><strong>100g paneer</strong> (bhurji / grilled / plain)</li>
+            <li><strong>1 tbsp peanut butter</strong></li>
+            <li><strong>Side salad:</strong> cucumber + tomato + onion (lemon + salt)</li>
+          </ul>
+          <div class="diet-macro-bar">
+            <div class="diet-macro-pill">P: <span>37g</span></div>
+            <div class="diet-macro-pill">C: <span>32g</span></div>
+            <div class="diet-macro-pill">F: <span>28g</span></div>
+            <div class="diet-macro-pill">~<span>530 kcal</span></div>
+          </div>
+        </div>
+
+        <div class="diet-meal-block">
+          <div class="diet-meal-time">1:00 PM</div>
+          <div class="diet-meal-title">☕ Black Coffee</div>
+          <ul class="diet-meal-items">
+            <li>No sugar. Last caffeine of the day.</li>
+          </ul>
+        </div>
+
+        <div class="diet-meal-block">
+          <div class="diet-meal-time">3:45 PM</div>
+          <div class="diet-meal-title">🍎 ACV Shot</div>
+          <ul class="diet-meal-items">
+            <li>1 tbsp Apple Cider Vinegar in 1 glass water (straw)</li>
+          </ul>
+        </div>
+
+        <div class="diet-meal-block">
+          <div class="diet-meal-time">4:00 PM — MEAL 2 (Last Meal)</div>
+          <div class="diet-meal-title">🍛 Roti + Daal + Legume + Vegetable</div>
+          <ul class="diet-meal-items">
+            <li><strong>2 multigrain roti</strong> + 1 tsp ghee</li>
+            <li><strong>1 katori daal</strong> (any)</li>
+            <li><strong>1 katori legume protein</strong> (rotate):
+              <div class="diet-rotation-grid" style="margin-top:6px;">
+                <div class="diet-rotation-item">
+                  <div class="day">TUE</div>
+                  <div class="meal">🫘 Rajma / Soybean</div>
+                </div>
+                <div class="diet-rotation-item">
+                  <div class="day">THU</div>
+                  <div class="meal">🫘 Kabuli Chana</div>
+                </div>
+              </div>
+            </li>
+            <li><strong>1 katori green vegetable</strong> (lauki / palak / bhindi / gobhi / tori)</li>
+          </ul>
+          <div class="diet-macro-bar">
+            <div class="diet-macro-pill">P: <span>32g</span></div>
+            <div class="diet-macro-pill">C: <span>60g</span></div>
+            <div class="diet-macro-pill">F: <span>12g</span></div>
+            <div class="diet-macro-pill">~<span>480 kcal</span></div>
+          </div>
+        </div>
+
+        <div class="diet-meal-block">
+          <div class="diet-meal-time">6:15 PM</div>
+          <div class="diet-meal-title">🍇 Fruit + Walnuts + Seed Mix</div>
+          <ul class="diet-meal-items">
+            <li>1 low-GI fruit: apple / guava / pomegranate / pear</li>
+            <li>4-5 walnut halves</li>
+            <li>1 tbsp seed mix</li>
+          </ul>
+          <div class="diet-macro-bar">
+            <div class="diet-macro-pill">P: <span>5g</span></div>
+            <div class="diet-macro-pill">C: <span>28g</span></div>
+            <div class="diet-macro-pill">F: <span>12g</span></div>
+            <div class="diet-macro-pill">~<span>230 kcal</span></div>
+          </div>
+        </div>
+
+        <div class="diet-rule-box">
+          <strong>Veg Day Total:</strong> ~102g Protein | ~152g Carbs | ~57g Fat | ~30g Fiber | <strong>~1525
+            kcal</strong>
+        </div>
+      </div>
+
+
+      <!-- SEED MIX -->
+      <button class="diet-collapsible">🌱 Seed Mix — Recipe & Prep</button>
+      <div class="diet-content">
+        <br>
+        <div class="diet-meal-block">
+          <div class="diet-meal-title">5-Seed Healing Blend</div>
+          <ul class="diet-meal-items">
+            <li><strong>Flaxseeds (alsi)</strong> — 2 tbsp → Omega-3, arteries, liver, skin</li>
+            <li><strong>Pumpkin seeds</strong> — 2 tbsp → Zinc, magnesium, skin clarity, brain</li>
+            <li><strong>Sunflower seeds</strong> — 1 tbsp → Vitamin E, selenium, skin + liver</li>
+            <li><strong>Chia seeds</strong> — 1 tbsp → Omega-3, fiber, gut → skin</li>
+            <li><strong>Sesame seeds (til)</strong> — 1 tbsp → Calcium, copper, liver (sesamin)</li>
+          </ul>
+        </div>
+        <div class="diet-meal-block">
+          <div class="diet-meal-title">Preparation</div>
+          <ul class="diet-meal-items">
+            <li>Dry roast each seed <strong>separately</strong> on LOW heat for 2-3 min</li>
+            <li>Cool completely (10 min)</li>
+            <li>Grind all together to <strong>coarse powder</strong> (not fine paste)</li>
+            <li>Store in airtight glass jar: room temp 3-4 wks, fridge 6-8 wks</li>
+          </ul>
+        </div>
+        <div class="diet-rule-box">
+          <strong>Dose:</strong> 1 tbsp at 6:15 PM with fruit + walnuts<br>
+          <strong>Cost:</strong> ~₹400-500 per batch (lasts 4-6 weeks)<br>
+          <strong>Why grind:</strong> Whole flaxseeds pass undigested. Grinding releases omega-3 + lignans.
+        </div>
+      </div>
+
+
+
+    </div>
+  </div>
+
   <!-- ===== WADROBE TAB ===== -->
   <div id="wadrobeView" class="tab-content">
     <style>
@@ -3682,6 +4129,25 @@
       }
     }
     initFitness();
+
+    function initDiet() {
+      const container = document.getElementById('dietView');
+      if (container) {
+        const coll = container.getElementsByClassName("diet-collapsible");
+        for (let i = 0; i < coll.length; i++) {
+          coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            let content = this.nextElementSibling;
+            if (content.style.maxHeight) {
+              content.style.maxHeight = null;
+            } else {
+              content.style.maxHeight = content.scrollHeight + "px";
+            }
+          });
+        }
+      }
+    }
+    initDiet();
 
   </script>
 </body>
