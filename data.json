@@ -1,13 +1,14 @@
 {
-  "timestamp": 1789025508048,
+  "timestamp": 1789225748435,
   "items": {
     "w_chk_m1_1": "false",
     "tracker_habits": "[{\"key\":\"gym_\",\"icon\":\"🎯\",\"name\":\"Gym 🏋️\"},{\"key\":\"post_gym_shake\",\"icon\":\"🎯\",\"name\":\"Post-GYM Shake\"},{\"key\":\"study_\",\"icon\":\"🎯\",\"name\":\"Study 🙇\"},{\"key\":\"meal_1_\",\"icon\":\"🎯\",\"name\":\"Meal 1🥘\"},{\"key\":\"meal_2_\",\"icon\":\"🎯\",\"name\":\"Meal 2 🥗\"}]",
-    "w_chk_m1_3": "true",
     "t_2026_7_25": "{\"study\":false}",
+    "w_chk_m1_3": "true",
     "t_2026_8_9": "{\"gym_\":true,\"post_gym_shake\":true,\"study_\":true,\"meal_1_\":true,\"meal_2_\":true}",
     "rm_ai": "{\"0_0\":true,\"0_1\":true,\"0_2\":true,\"0_3\":true,\"0_6\":true,\"0_4\":true}",
     "w_chk_m1_2": "false",
-    "t_2026_7_30": "{\"study\":true}"
+    "t_2026_7_30": "{\"study\":true}",
+    "w_chk_m2_5": "true"
   }
 }
