@@ -1,6 +1,7 @@
 {
-  "timestamp": 1789225748435,
+  "timestamp": 1789226422936,
   "items": {
+    "w_chk_m8_3": "true",
     "w_chk_m1_1": "false",
     "tracker_habits": "[{\"key\":\"gym_\",\"icon\":\"🎯\",\"name\":\"Gym 🏋️\"},{\"key\":\"post_gym_shake\",\"icon\":\"🎯\",\"name\":\"Post-GYM Shake\"},{\"key\":\"study_\",\"icon\":\"🎯\",\"name\":\"Study 🙇\"},{\"key\":\"meal_1_\",\"icon\":\"🎯\",\"name\":\"Meal 1🥘\"},{\"key\":\"meal_2_\",\"icon\":\"🎯\",\"name\":\"Meal 2 🥗\"}]",
     "t_2026_7_25": "{\"study\":false}",
